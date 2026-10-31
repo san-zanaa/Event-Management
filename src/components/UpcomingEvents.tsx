@@ -1,20 +1,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import {
-  CalendarDays,
-  MapPin,
-  UserRound,
-  ArrowRight,
-  Tag,
-  Flame,
-} from "lucide-react";
-
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
-
+import { CalendarDays, MapPin, UserRound, ArrowRight, Tag, Flame } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -113,7 +101,7 @@ export default function UpcomingEvents() {
           <div>
             <div className="mb-3 flex items-center gap-2">
               <Flame className="h-4 w-4 fill-orange-400 text-orange-500" />
-              <span className="text-xs font-bold uppercase tracking-widest text-teal-600">
+              <span className="text-xs font-bold uppercase tracking-widest text-[#0ead69]">
                 Upcoming Initiatives
               </span>
             </div>
@@ -130,7 +118,7 @@ export default function UpcomingEvents() {
 
           <Link
             href="/events"
-            className="group flex items-center gap-2 text-sm font-semibold text-teal-700 transition hover:text-teal-800"
+            className="group flex items-center gap-2 text-sm font-semibold text-[#0ead69] transition hover:text-[#07c573]"
           >
             View All Events
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -143,7 +131,7 @@ export default function UpcomingEvents() {
               key={event.id}
               className="group overflow-hidden rounded-2xl border border-slate-200 bg-white py-0 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className="relative h-56 w-full overflow-hidden">
+              <div className="relative h-60 w-full overflow-hidden">
                 <Image
                   src={event.image}
                   alt={event.title}
@@ -157,30 +145,29 @@ export default function UpcomingEvents() {
                   <Tag className="h-3 w-3" />
                   {event.category}
                 </Badge>
-                <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-lg bg-slate-950/85 px-3 py-2 text-xs font-medium text-white backdrop-blur-sm">
-                  <CalendarDays className="h-4 w-4 text-teal-400" />
+                <div className="absolute bottom-2 left-3 flex items-center gap-2 rounded-lg bg-slate-950/85 px-3 py-2 text-xs font-medium text-white backdrop-blur-sm">
+                  <CalendarDays className="h-4 w-4 text-[#0ead69]" />
                   {event.date}
                 </div>
               </div>
 
-              <CardContent className="flex min-h-[250px] flex-col p-5">
+              <CardContent className="flex min-h-[240px] flex-col p-5">
                 <div className="flex-1">
-                  <h3 className="line-clamp-1 text-lg font-bold text-slate-900 transition-colors group-hover:text-teal-700">
+                  <h3 className="line-clamp-1 text-lg font-bold text-slate-900 transition-colors group-hover:text-[#07c573]">
                     {event.title}
                   </h3>
-                  <div className="mt-3 flex items-center gap-2 text-sm text-slate-500">
-                    <MapPin className="h-4 w-4 shrink-0 text-teal-600" />
+                  <div className="mt-1 flex items-center gap-1 text-sm text-slate-500">
+                    <MapPin className="h-4 w-4 shrink-0 text-[#0ead69]" />
                     <span>{event.location}</span>
                   </div>
-                  <p className="mt-3 line-clamp-2 text-sm leading-6 text-slate-500">
+                  <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-500">
                     {event.description}
                   </p>
-
                 </div>
 
-                <div className="my-4 border-t border-slate-100 pt-4">
-                  <div className="flex items-center gap-2 text-sm text-slate-500">
-                    <UserRound className="h-4 w-4 text-teal-600" />
+                <div className="my-2 border-t border-slate-100 pt-4">
+                  <div className="flex items-center gap-1 text-sm text-slate-500">
+                    <UserRound className="h-4 w-4 text-[#0ead69]" />
                     <span className="line-clamp-1">
                       {event.organizer}
                     </span>
@@ -188,11 +175,10 @@ export default function UpcomingEvents() {
                 </div>
 
                 <Button asChild
-                  className="h-11 w-full rounded-xl bg-teal-600 font-semibold text-white hover:bg-teal-700"
+                  className="h-11 w-full rounded-xl bg-[#0ead69] font-semibold text-white hover:bg-[#07c573] cursor-pointer"
                 >
                   <Link href={event.href}>
-                    View Event
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    View Event <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
               </CardContent>

@@ -32,7 +32,7 @@ export default function Features() {
         <section className="bg-[#F5F7F2] py-20 md:py-24 px-5">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center max-w-xl mx-auto mb-14">
-                    <span className="text-sm font-semibold tracking-[0.2em] text-[#28704B] uppercase">
+                    <span className="text-sm font-semibold tracking-[0.2em] text-[#0ead69] uppercase">
                         Why Choose Us
                     </span>
                     <h2 className="text-3xl md:text-2xl lg:text-3xl font-bold text-[#17251C] mt-2 leading-tight">
@@ -56,7 +56,7 @@ export default function Features() {
                                 <div className="w-12 h-12 rounded-xl bg-[#EAF2EA] flex items-center justify-center mb-6">
                                     <Icon
                                         size={24}
-                                        className="text-[#28704B]"
+                                        className="text-[#0ead69]"
                                         strokeWidth={1.8}/>
                                 </div>
                                 <h3 className="text-lg font-semibold text-[#17251C] mb-3">

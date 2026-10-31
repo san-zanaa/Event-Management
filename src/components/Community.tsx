@@ -55,10 +55,10 @@ const events = [
 
 export default function CommunityGallery() {
     return (
-        <section className="bg-[#F8FAFC] py-16 md:py-20">
+        <section className="bg-[#F8FAFC] py-16 md:py-16">
             <div className="mx-auto max-w-7xl px-5 md:px-8">
                 <div className="mb-10 text-center">
-                    <p className="mb-2 text-[11px] font-extrabold uppercase tracking-[0.18em] text-teal-600">
+                    <p className="mb-2 text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#0ead69]">
                         Visual Stories
                     </p>
                     <h2 className="text-3xl font-extrabold text-slate-900 md:text-4xl">
@@ -85,14 +85,14 @@ export default function CommunityGallery() {
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
                             
                             <div className="absolute bottom-0 left-0 w-full p-4">
-                                <span className="mb-1 inline-block rounded-md bg-teal-600 px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-white">
+                                <span className="mb-1 inline-block rounded-md bg-[#0ead69] px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-white">
                                     {event.galleryLabel}
                                 </span>
                                 <h3 className="text-base font-bold leading-tight text-white">
                                     {event.title}
                                 </h3>
                                 <div className="mt-1 flex items-center gap-1 text-xs text-white/85">
-                                    <MapPin className="h-3.5 w-3.5 text-teal-400" />
+                                    <MapPin className="h-3.5 w-3.5 text-[#0ead69]" />
                                     <span>{event.location}</span>
                                 </div>
                             </div>

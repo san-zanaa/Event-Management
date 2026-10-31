@@ -19,7 +19,7 @@ export default function Hero() {
             <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/50" />
             <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-5 py-24">
                 <div className="flex items-center gap-3 rounded-full border border-white/30 bg-white/15 backdrop-blur-md px-5 py-2.5 mb-8">
-                    <span className="h-2.5 w-2.5 rounded-full bg-lime-400" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-[#0ead69]" />
                     <p className="text-sm text-white">
                         Your community, your moments, your events.
                     </p>
@@ -44,7 +44,7 @@ export default function Hero() {
 
                     <Link
                         href="#events"
-                        className="bg-lime-400 text-black px-8 py-4 rounded-full font-semibold hover:bg-lime-300 transition duration-300"
+                        className="bg-[#0ead69] text-black px-8 py-4 rounded-full font-semibold hover:bg-[#81e4b9] transition duration-300"
                     >
                         Explore Upcoming Events →
                     </Link>
