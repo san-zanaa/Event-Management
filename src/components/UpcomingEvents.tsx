@@ -109,10 +109,7 @@ export default function UpcomingEvents() {
   return (
     <section className="w-full bg-slate-50 py-16 md:py-20">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
-
-        {/* Section Header */}
         <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
-
           <div>
             <div className="mb-3 flex items-center gap-2">
               <Flame className="h-4 w-4 fill-orange-400 text-orange-500" />
@@ -140,18 +137,13 @@ export default function UpcomingEvents() {
           </Link>
         </div>
 
-        {/* Events Grid */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-
           {events.map((event) => (
             <Card
               key={event.id}
               className="group overflow-hidden rounded-2xl border border-slate-200 bg-white py-0 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-
-              {/* Image Section */}
               <div className="relative h-56 w-full overflow-hidden">
-
                 <Image
                   src={event.image}
                   alt={event.title}
@@ -159,40 +151,27 @@ export default function UpcomingEvents() {
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-
-                {/* Category Badge */}
                 <Badge
                   className={`absolute left-4 top-4 gap-1 rounded-full border-0 px-3 py-1.5 text-xs font-semibold shadow-sm ${event.color}`}
                 >
                   <Tag className="h-3 w-3" />
                   {event.category}
                 </Badge>
-
-                {/* Date Overlay */}
                 <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-lg bg-slate-950/85 px-3 py-2 text-xs font-medium text-white backdrop-blur-sm">
                   <CalendarDays className="h-4 w-4 text-teal-400" />
                   {event.date}
                 </div>
-
               </div>
 
-              {/* Card Content */}
               <CardContent className="flex min-h-[250px] flex-col p-5">
-
                 <div className="flex-1">
-
-                  {/* Title */}
                   <h3 className="line-clamp-1 text-lg font-bold text-slate-900 transition-colors group-hover:text-teal-700">
                     {event.title}
                   </h3>
-
-                  {/* Location */}
                   <div className="mt-3 flex items-center gap-2 text-sm text-slate-500">
                     <MapPin className="h-4 w-4 shrink-0 text-teal-600" />
                     <span>{event.location}</span>
                   </div>
-
-                  {/* Description */}
                   <p className="mt-3 line-clamp-2 text-sm leading-6 text-slate-500">
                     {event.description}
                   </p>
@@ -208,8 +187,7 @@ export default function UpcomingEvents() {
                   </div>
                 </div>
 
-                <Button
-                  asChild
+                <Button asChild
                   className="h-11 w-full rounded-xl bg-teal-600 font-semibold text-white hover:bg-teal-700"
                 >
                   <Link href={event.href}>
@@ -217,7 +195,6 @@ export default function UpcomingEvents() {
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
-
               </CardContent>
             </Card>
           ))}
