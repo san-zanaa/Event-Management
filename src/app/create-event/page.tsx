@@ -28,6 +28,13 @@ const photoPresets = [
     },
 ];
 
+const initialForm = {
+    title: "",
+    date: "",
+    location: "",
+    description: "",
+};
+
 const eventTypes = [
     "Food Drive",
     "Donation",
@@ -50,6 +57,10 @@ export default function CreateEventPage({
     const [imageUrl, setImageUrl] = useState("");
     const [eventType, setEventType] = useState("Donation");
 
+    const [form, setForm] = useState(initialForm);
+    const update = (field: keyof typeof form, value: string) =>
+        setForm((current) => ({ ...current, [field]: value }))
+
     const today = new Date();
     const minDate = [
         today.getFullYear(),
@@ -57,22 +68,40 @@ export default function CreateEventPage({
         String(today.getDate()).padStart(2, "0"),
     ].join("-");
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const formData = new FormData(e.currentTarget);
+        const form = e.currentTarget;
+        const formData = new FormData(form);
 
         const eventData = {
             title: formData.get("title"),
             category: eventType,
             date: formData.get("date"),
             location: formData.get("location"),
-            image: imageUrl,
+            image: formData.get("image"),
             description: formData.get("description"),
-            organizerEmail,
+            organizerEmail: organizerEmail,
         };
-
-        console.log("New Event:", eventData);
+        try {
+            const res = await fetch("http://localhost:5000/create-event", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(eventData),
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                throw new Error(data.message || "Failed to create event");
+            }
+            console.log("New Event:", data);
+            alert("Event created successfully!");
+        } catch (error) {
+            console.error("Error creating event:", error);
+            alert("Something went wrong!");
+        }
     };
 
     return (

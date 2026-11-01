@@ -9,21 +9,59 @@ import { Input } from "@/components/ui/input";
 import { ArrowRight, User, Mail, Lock, Eye, EyeOff, Check, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 
 export default function SignupPage({ className, ...props }: React.ComponentProps<"div">) {
+    const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
     const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
+    const [photo, setPhoto] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const hasUppercase = /[A-Z]/.test(password);
     const hasLowercase = /[a-z]/.test(password);
     const hasMinLength = password.length >= 6;
 
+    const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (!hasUppercase || !hasLowercase || !hasMinLength) {
+            alert("Please fulfill all password requirements!");
+            return;
+        }
+        setLoading(true);
+
+        try {
+            const { error } = await authClient.signUp.email({
+                name,
+                email,
+                password,
+                image: photo || undefined,
+            });
+            if (error) {
+                alert(error.message || "Signup failed!");
+                return;
+            }
+            sessionStorage.setItem("signupEmail", email);
+            sessionStorage.setItem("signupPassword", password);
+
+            alert("Account created successfully!");
+            router.push("/login");
+
+        } catch (error) {
+            console.error("Signup error:", error);
+            alert("Something went wrong!");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="flex min-h-screen w-full items-center justify-center bg-gray-50 p-6 md:p-12">
             <div className="w-full max-w-sm p-2">
-                <div
-                    className={cn("flex flex-col items-center", className)}
-                    {...props}>
+                <div className={cn("flex flex-col items-center", className)}>
                     <Card className="w-full max-w-[380px] border-none shadow-lg rounded-2xl bg-white">
 
                         <CardHeader className="items-center text-center pb-4">
@@ -44,7 +82,7 @@ export default function SignupPage({ className, ...props }: React.ComponentProps
 
                         <CardContent className="px-5 pb-6">
 
-                            <form>
+                            <form onSubmit={handleSignup}>
                                 <FieldGroup className="gap-3">
                                     <Field className="gap-1">
                                         <FieldLabel htmlFor="name" className="text-xs font-semibold">
@@ -57,8 +95,10 @@ export default function SignupPage({ className, ...props }: React.ComponentProps
                                                 id="name"
                                                 type="text"
                                                 placeholder="Your Name"
+                                                value={name}
+                                                onChange={(e) => setName(e.target.value)}
                                                 required
-                                                className="pl-9 h-10 bg-gray-50 border-gray-200 text-xs focus-visible:ring-[#0ead91]"
+                                                className="pl-9 h-10 bg-gray-50 border-gray-200 text-xs focus-visible:ring-[#0ead69]"
                                             />
                                         </div>
                                     </Field>
@@ -73,8 +113,11 @@ export default function SignupPage({ className, ...props }: React.ComponentProps
                                                 id="email"
                                                 type="email"
                                                 placeholder="name@example.com"
+                                                value={email}
+                                                onChange={(e) => setEmail(e.target.value)}
                                                 required
-                                                className="pl-9 h-10 bg-gray-50 border-gray-200 text-xs focus-visible:ring-[#0ead91]" />
+                                                className="pl-9 h-10 bg-gray-50 border-gray-200 text-xs focus-visible:ring-[#0ead69]"
+                                            />
                                         </div>
                                     </Field>
 
@@ -87,7 +130,10 @@ export default function SignupPage({ className, ...props }: React.ComponentProps
                                                 id="photo"
                                                 type="url"
                                                 placeholder="https://images.unsplash.com/..."
-                                                className="h-10 bg-gray-50 border-gray-200 text-xs focus-visible:ring-[#0ead91]" />
+                                                value={photo}
+                                                onChange={(e) => setPhoto(e.target.value)}
+                                                className="h-10 bg-gray-50 border-gray-200 text-xs focus-visible:ring-[#0ead91]"
+                                            />
                                         </div>
                                         <FieldDescription className="text-[10px] text-gray-400">
                                             Optional: Leave empty for default avatar
@@ -107,7 +153,7 @@ export default function SignupPage({ className, ...props }: React.ComponentProps
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
                                                 required
-                                                className="pl-9 pr-10 h-10 bg-gray-50 border-gray-200 text-xs focus-visible:ring-[#0ead91]" />
+                                                className="pl-9 pr-10 h-10 bg-gray-50 border-gray-200 text-xs focus-visible:ring-[#0ead69]" />
                                             <button
                                                 type="button"
                                                 onClick={() => setShowPassword(!showPassword)}
@@ -134,9 +180,10 @@ export default function SignupPage({ className, ...props }: React.ComponentProps
 
                                     <Button
                                         type="submit"
+                                        disabled={loading}
                                         className="w-full h-10 mt-1 bg-[#0ead69] hover:bg-[#07c573] text-white font-semibold text-xs cursor-pointer">
-                                        Register
-                                        <ArrowRight size={15} />
+                                        {loading ? "Creating Account..." : "Register"}
+                                        {!loading && <ArrowRight size={15} />}
                                     </Button>
 
                                     <FieldDescription className="text-center text-xs text-gray-500 mt-1">

@@ -1,13 +1,67 @@
-
+"use client"
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Mail, Lock, EyeOff, Eye } from "lucide-react";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
-export default function Page() {
+export default function LoginPage() {
+  const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+
+  useEffect(() => {
+    const savedEmail = sessionStorage.getItem("signupEmail");
+    const savedPassword = sessionStorage.getItem("signupPassword");
+
+    if (savedEmail) {
+      setEmail(savedEmail);
+    }
+    if (savedPassword) {
+      setPassword(savedPassword);
+    }
+  }, []);
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!email || !password) {
+      alert("Please enter your email and password!");
+      return;
+    }
+    setLoading(true);
+
+    try {
+      const { error } = await authClient.signIn.email({
+        email,
+        password,
+      });
+      if (error) {
+        alert(error.message || "Login failed!");
+        return;
+      }
+      sessionStorage.removeItem("signupEmail");
+      sessionStorage.removeItem("signupPassword");
+
+      alert("Login successful!");
+
+      router.push("/");
+      router.refresh();
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Something went wrong. Please try again!");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-gray-50 p-6 md:p-12">
       <div className="w-full max-w-sm p-2">
@@ -21,17 +75,25 @@ export default function Page() {
             </CardHeader>
 
             <CardContent>
-              <form>
+              <form onSubmit={handleLogin}>
                 <FieldGroup>
                   <Field>
                     <FieldLabel htmlFor="email">
                       Email
                     </FieldLabel>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="m@example.com"
-                      required/>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="name@example.com"
+                        required
+                        className="pl-9 h-10 bg-gray-50 border-gray-200 text-xs focus-visible:ring-[#0ead69]"
+                      />
+                    </div>
                   </Field>
 
                   <Field>
@@ -45,19 +107,39 @@ export default function Page() {
                         Forgot your password?
                       </a>
                     </div>
-                    <Input
-                      id="password"
-                      type="password"
-                      required
-                    />
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
+                      <Input
+                        id="password"
+                        name="password"
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="••••••••"
+                        required
+                        className="pl-9 pr-10 h-10 bg-gray-50 border-gray-200 text-xs focus-visible:ring-[#0ead69]" />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700">
+                        {showPassword ? (
+                          <EyeOff size={18} />
+                        ) : (
+                          <Eye size={18} />
+                        )}
+                      </button>
+                    </div>
                   </Field>
 
                   <Field>
                     <Button
                       type="submit"
+                      disabled={loading}
                       className="bg-[#0ead69] hover:bg-[#07c573] mb-2 cursor-pointer">
-                      Login
-                      <ArrowRight className="h-4 w-4" />
+                      {loading ? "Logging in..." : "Login"}
+                      {!loading && (
+                        <ArrowRight className="h-4 w-4" />
+                      )}
                     </Button>
 
                     <p className="flex justify-center items-center text-xs text-gray-500 mb-2">

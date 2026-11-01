@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { CalendarDays, LogIn } from 'lucide-react'
 import Link from 'next/link';
+import UserInfo from './UserInfo';
 
 const Navbar = () => {
     return (
@@ -18,10 +19,7 @@ const Navbar = () => {
                     <h3>Upcoming Events</h3>
                 </div>
                 <div className='flex gap-2 px-20 text-sm'>
-                    <Link href= "/login"
-                    className='flex gap-2 bg-[#0ead69] text-white py-2 px-4 rounded-md hover:bg-[#07c573] cursor-pointer'>
-                        <span><LogIn size={20} /></span>Login
-                    </Link>
+                    <UserInfo />
                 </div>
             </div>     
     );
