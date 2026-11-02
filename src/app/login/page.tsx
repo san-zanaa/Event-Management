@@ -62,6 +62,13 @@ export default function LoginPage() {
     }
   }
 
+  const handleGoogleSignUp = async () => {
+        await authClient.signIn.social({
+            provider: "google",
+            callbackURL: "/",
+        })
+    }
+
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-gray-50 p-6 md:p-12">
       <div className="w-full max-w-sm p-2">
@@ -145,7 +152,7 @@ export default function LoginPage() {
                     <p className="flex justify-center items-center text-xs text-gray-500 mb-2">
                       OR CONTINUE WITH
                     </p>
-                    <Button
+                    <Button onClick={handleGoogleSignUp}
                       variant="outline"
                       type="button"
                       className="cursor-pointer mb-1">

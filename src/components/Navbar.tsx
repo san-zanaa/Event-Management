@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { CalendarDays, LogIn } from 'lucide-react'
+import { CalendarDays } from 'lucide-react'
 import Link from 'next/link';
 import UserInfo from './UserInfo';
 
@@ -15,8 +15,8 @@ const Navbar = () => {
                     </div>
                 </div>
                 <div className='flex justify-center items-center gap-1'>
-                    <span><CalendarDays /></span>
-                    <h3>Upcoming Events</h3>
+                    <span><CalendarDays size={15}/></span>
+                    <Link href="/upcoming-events" className='text-gray-500'>Upcoming Events</Link>
                 </div>
                 <div className='flex gap-2 px-20 text-sm'>
                     <UserInfo />

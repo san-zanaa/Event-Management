@@ -108,7 +108,7 @@ export default function CreateEventPage({
         <div className="min-h-screen w-full bg-[#f7f9fb] px-4 py-5 md:px-8 md:py-8">
             <div className="mx-auto max-w-[720px]">
                 <Link
-                    href="/events"
+                    href="/upcoming-events"
                     className="mb-7 inline-flex items-center gap-2 text-xs font-medium text-slate-500 transition hover:text-[#0ead69]">
                     <ArrowLeft size={15} />
                     Back to Upcoming Events

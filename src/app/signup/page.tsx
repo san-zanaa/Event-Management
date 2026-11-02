@@ -56,7 +56,7 @@ export default function SignupPage({ className, ...props }: React.ComponentProps
         } finally {
             setLoading(false);
         }
-    };
+    }
 
     return (
         <div className="flex min-h-screen w-full items-center justify-center bg-gray-50 p-6 md:p-12">
