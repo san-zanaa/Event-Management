@@ -6,7 +6,7 @@ import UserInfo from './UserInfo';
 
 const Navbar = () => {
     return (
-            <div className='relative flex justify-between max-w-7xl p-5'>
+            <div className='relative flex justify-between max-w-7xl p-5 sticky top-0 z-50 bg-white'>
                 <div className='flex gap-1 px-20'>
                     <Image src={'/images/Sociallogo.png'} alt='logo' height={50} width={50} className='w-10 h-12 object-contain' />
                     <div className='flex flex-col items-center sm:items-start'>

@@ -33,7 +33,7 @@ export default function Footer() {
                         </h3>
                         <ul className="space-y-3">
                             <li>
-                                <Link href="/events" className="inline-flex items-center gap-2 text-sm hover:text-[#0ead69] transition-colors">
+                                <Link href="/upcoming-events" className="inline-flex items-center gap-2 text-sm hover:text-[#0ead69] transition-colors">
                                     <CalendarDays size={15} className="text-[#0ead69]" />
                                     Upcoming Events
                                 </Link>
