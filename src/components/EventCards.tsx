@@ -1,13 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-  CalendarDays,
-  MapPin,
-  ArrowUpRight,
-  Tag,
-  Zap,
-} from "lucide-react";
-
+import { CalendarDays, MapPin, ArrowUpRight, Tag, Zap } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -85,7 +78,7 @@ export default function EventCard({ event }: EventCardProps) {
             </span>
 
             <Link
-              href={`/events/${event._id}`}
+              href={`/${event._id}`}
               className="flex shrink-0 items-center gap-1 text-sm font-semibold text-[#0ead69] transition-colors hover:text-[#087c4b]"
             >
               View Event

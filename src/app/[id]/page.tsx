@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+
 import {
     ArrowLeft,
     ArrowUpRight,
@@ -68,6 +69,8 @@ export default function EventDetailsPage({ params }: PageProps) {
 
     const [joined, setJoined] = useState(false);
     const [volunteerCount, setVolunteerCount] = useState(0);
+    const [isJoining, setIsJoining] = useState(false);
+
 
     useEffect(() => {
         async function getId() {
@@ -122,21 +125,101 @@ export default function EventDetailsPage({ params }: PageProps) {
         }
     }, [event]);
 
-    const handleJoin = () => {
-        if (isPending) return;
+    const handleJoin = async () => {
+        if (isPending || isJoining) return;
 
-        if (!session) {
+        if (!session?.user?.email) {
             router.push(`/login?redirect=/${id}`);
             return;
         }
-        if (joined) {
-            setJoined(false);
-            setVolunteerCount((prev) => Math.max(0, prev - 1));
-        } else {
+
+        if (!event?._id) {
+            alert("Event information not found!");
+            return;
+        }
+        try {
+            setIsJoining(true);
+
+            const response = await fetch("http://localhost:5000/join-events", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    eventId: event._id,
+                    userEmail: session.user.email,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Failed to join event");
+            }
+
             setJoined(true);
             setVolunteerCount((prev) => prev + 1);
+
+            alert("You have successfully joined this event!");
+
+            router.push("/joined-events");
+
+        } catch (error) {
+            console.error("Join event error:", error);
+
+            alert(
+                error instanceof Error
+                    ? error.message
+                    : "Something went wrong!"
+            )
+        } finally {
+            setIsJoining(false);
+        }
+    }
+
+    const handleLeave = async () => {
+        if (!session?.user?.email || !event?._id || isJoining) return;
+
+        const confirmed = window.confirm(
+            "Are you sure you want to leave this event?"
+        );
+
+        if (!confirmed) return;
+
+        try {
+            setIsJoining(true);
+
+            const response = await fetch(
+                `http://localhost:5000/leave-event/${encodeURIComponent(session.user.email)}/${event._id}`,
+                {
+                    method: "DELETE",
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Failed to leave event");
+            }
+
+            setJoined(false);
+            setVolunteerCount((prev) => Math.max(0, prev - 1));
+
+            alert("You have successfully left this event!");
+
+        } catch (error) {
+            console.error("Leave event error:", error);
+
+            alert(
+                error instanceof Error
+                    ? error.message
+                    : "Something went wrong!"
+            );
+        } finally {
+            setIsJoining(false);
         }
     };
+
     if (loading || !id) {
         return (
             <main className="min-h-screen flex items-center justify-center bg-[#f7faf9]">
@@ -265,22 +348,32 @@ export default function EventDetailsPage({ params }: PageProps) {
                                 </button>
 
                                 <button
-                                    onClick={handleJoin}
-                                    disabled={isPending}
+                                    onClick={joined ? handleLeave : handleJoin}
+                                    disabled={isPending || isJoining}
                                     className={`flex flex-1 sm:flex-none items-center justify-center gap-2 rounded-xl px-6 py-3.5 font-semibold text-white transition ${joined
                                             ? "bg-gray-700 hover:bg-gray-800"
                                             : "bg-emerald-600 hover:bg-emerald-700"
-                                        }`}>
-                                    {joined ? (
-                                        <>
-                                            Joined (Click to Leave)
-                                        </>
-                                    ) : (
-                                        <>
-                                            Join as Volunteer
-                                            <ArrowUpRight size={17} />
-                                        </>
-                                    )}
+                                        }`}
+                                >
+                                    {isPending
+                                        ? "Please wait..."
+                                        : isJoining
+                                            ? joined
+                                                ? "Leaving..."
+                                                : "Joining..."
+                                            : joined
+                                                ? (
+                                                    <>
+                                                        Joined (Click to Leave)
+                                                        <CheckCircle2 size={17} />
+                                                    </>
+                                                )
+                                                : (
+                                                    <>
+                                                        Join as Volunteer
+                                                        <ArrowUpRight size={17} />
+                                                    </>
+                                                )}
                                 </button>
                             </div>
                         </section>
