@@ -234,7 +234,7 @@ export default function ManageEventsPage() {
         return (
             <div className="flex min-h-[70vh] flex-col items-center justify-center px-5 text-center">
                 <AlertCircle className="mb-4 h-12 w-12 text-emerald-600" />
-                <h2 className="text-2xl font-bold text-gray-900">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-300">
                     Please log in first
                 </h2>
                 <p className="mt-2 text-gray-500">
@@ -250,7 +250,7 @@ export default function ManageEventsPage() {
     }
 
     return (
-        <main className="min-h-screen bg-[#f7faf8] px-4 py-10 sm:px-6 lg:px-10">
+        <main className="min-h-screen bg-[#f7faf8] px-4 py-10 sm:px-6 lg:px-10 dark:bg-[#15171D]">
             <div className="mx-auto max-w-7xl">
                 <section className="mb-10 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
                     <div>
@@ -258,10 +258,10 @@ export default function ManageEventsPage() {
                             <PartyPopper size={15} />
                             Your Dashboard
                         </div>
-                        <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                        <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl dark:text-white">
                             Manage Events
                         </h1>
-                        <p className="mt-3 max-w-xl leading-7 text-gray-500">
+                        <p className="mt-3 max-w-xl leading-7 text-gray-400">
                             Keep track of your community events. Update event details,
                             manage volunteers, and make a difference in your community.
                         </p>
@@ -276,32 +276,32 @@ export default function ManageEventsPage() {
                 </section>
 
                 <section className="mb-10 grid grid-cols-1 gap-5 sm:grid-cols-3">
-                    <div className="rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm transition hover:shadow-md">
+                    <div className="rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm transition hover:shadow-md dark:bg-[#222630]">
                         <div className="flex items-center justify-between">
-                            <p className="text-sm font-medium text-gray-500">
+                            <p className="text-sm font-medium text-gray-400">
                                 Total Events Created
                             </p>
-                            <div className="rounded-xl bg-emerald-50 p-3 text-emerald-600">
+                            <div className="rounded-xl bg-emerald-50 p-3 text-emerald-600 dark:bg-gray-300">
                                 <CalendarDays size={22} />
                             </div>
                         </div>
-                        <h2 className="mt-4 text-3xl font-extrabold text-gray-900">
+                        <h2 className="mt-4 text-3xl font-extrabold text-gray-900 dark:text-white">
                             {events.length}
                         </h2>
                         <p className="mt-1 text-xs text-gray-400">
                             Events organized by you
                         </p>
                     </div>
-                    <div className="rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm transition hover:shadow-md">
+                    <div className="rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm transition hover:shadow-md dark:bg-[#222630]">
                         <div className="flex items-center justify-between">
-                            <p className="text-sm font-medium text-gray-500">
+                            <p className="text-sm font-medium text-gray-400">
                                 Total Volunteers
                             </p>
-                            <div className="rounded-xl bg-blue-50 p-3 text-blue-600">
+                            <div className="rounded-xl bg-blue-50 p-3 text-blue-600 dark:bg-gray-300">
                                 <Users size={22} />
                             </div>
                         </div>
-                        <h2 className="mt-4 text-3xl font-extrabold text-gray-900">
+                        <h2 className="mt-4 text-3xl font-extrabold text-gray-900 dark:text-white">
                             {events.reduce(
                                 (total, event) => total + (event.volunteerCount || 0),
                                 0
@@ -312,16 +312,16 @@ export default function ManageEventsPage() {
                         </p>
                     </div>
 
-                    <div className="rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm transition hover:shadow-md">
+                    <div className="rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm transition hover:shadow-md dark:bg-[#222630]">
                         <div className="flex items-center justify-between">
                             <p className="text-sm font-medium text-gray-500">
                                 Your Account
                             </p>
-                            <div className="rounded-xl bg-purple-50 p-3 text-purple-600">
+                            <div className="rounded-xl bg-purple-50 p-3 text-purple-600 dark:bg-gray-300">
                                 <Users size={22} />
                             </div>
                         </div>
-                        <p className="mt-4 truncate text-base font-bold text-gray-800">
+                        <p className="mt-4 truncate text-base font-bold text-gray-800 dark:text-white">
                             {userEmail}
                         </p>
 
@@ -482,10 +482,10 @@ export default function ManageEventsPage() {
                 <section>
                     <div className="mb-6 flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900">
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                                 Events Created by You
                             </h2>
-                            <p className="mt-1 text-sm text-gray-500">
+                            <p className="mt-1 text-sm text-gray-400">
                                 View and manage all your published events.
                             </p>
                         </div>
@@ -495,12 +495,12 @@ export default function ManageEventsPage() {
                     </div>
 
                     {error ? (
-                        <div className="rounded-2xl border border-red-100 bg-red-50 p-6 text-red-600">
+                        <div className="rounded-2xl border border-red-100 bg-red-50 p-6 text-red-600 dark:bg-[#222630]">
                             {error}
                         </div>
                     ) : events.length === 0 ? (
 
-                        <div className="rounded-3xl border border-dashed border-emerald-200 bg-white px-5 py-20 text-center shadow-sm">
+                        <div className="rounded-3xl border border-dashed border-emerald-200 bg-white px-5 py-20 text-center shadow-sm dark:bg-[#222630]">
                             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
                                 <CalendarDays size={32} />
                             </div>
@@ -526,7 +526,7 @@ export default function ManageEventsPage() {
                             {events.map((event) => (
                                 <article
                                     key={event._id}
-                                    className="group overflow-hidden rounded-3xl border border-gray-100 bg-white p-4 shadow-sm transition-all duration-300 hover:border-emerald-100 hover:shadow-lg sm:p-5">
+                                    className="group overflow-hidden rounded-3xl border border-gray-100 bg-white p-4 shadow-sm transition-all duration-300 hover:border-emerald-100 hover:shadow-lg sm:p-5 dark:bg-[#222630]">
                                     <div className="flex flex-col gap-5 sm:flex-row">
                                         <div className="relative h-52 w-full shrink-0 overflow-hidden rounded-2xl bg-emerald-50 sm:h-48 sm:w-64">
                                             {event.image ? (
@@ -555,10 +555,10 @@ export default function ManageEventsPage() {
                                                         Created by You
                                                     </span>
                                                 </div>
-                                                <h3 className="text-xl font-extrabold leading-snug text-gray-900 transition-colors group-hover:text-emerald-700 sm:text-2xl">
+                                                <h3 className="text-xl font-extrabold leading-snug text-gray-900 transition-colors group-hover:text-emerald-700 sm:text-2xl dark:text-white">
                                                     {event.title}
                                                 </h3>
-                                                <div className="mt-4 flex flex-wrap items-center gap-x-7 gap-y-3 text-sm text-gray-600 sm:text-base">
+                                                <div className="mt-4 flex flex-wrap items-center gap-x-7 gap-y-3 text-sm text-gray-400 sm:text-base">
                                                     <p className="flex items-center gap-2">
                                                         <CalendarDays size={19} className="shrink-0 text-emerald-600" />
                                                         {event.dateISO || event.date}
@@ -568,16 +568,16 @@ export default function ManageEventsPage() {
                                                         {event.time || "Time not specified"}
                                                     </p>
                                                 </div>
-                                                <p className="mt-4 flex items-center gap-2 text-sm text-gray-600 sm:text-base">
+                                                <p className="mt-4 flex items-center gap-2 text-sm text-gray-400 sm:text-base ">
                                                     <MapPin size={19} className="shrink-0 text-emerald-600" />
                                                     <span className="line-clamp-1">{event.location}</span>
                                                 </p>
                                             </div>
-                                            <div className="mt-5 flex flex-col justify-between gap-4 border-t border-gray-100 pt-4 sm:flex-row sm:items-center">
-                                                <div className="flex items-center gap-2 text-gray-600">
+                                            <div className="mt-5 flex flex-col justify-between gap-4 border-t border-gray-100 pt-4 sm:flex-row sm:items-center dark:border-gray-600">
+                                                <div className="flex items-center gap-2 text-gray-400">
                                                     <Users size={21} className="text-emerald-600" />
                                                     <span className="text-base">
-                                                        <strong className="font-bold text-gray-900">
+                                                        <strong className="font-bold text-gray-900 dark:text-gray-400">
                                                             {event.volunteerCount || 0}
                                                         </strong>{" "}
                                                         Volunteers Joined

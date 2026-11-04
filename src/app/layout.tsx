@@ -3,6 +3,8 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { ThemeProvider } from "next-themes";
+
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -17,12 +19,19 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en" className={`${poppins.className} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">
-        <Navbar />
-        {children}
-        <Footer />
-        </body>
+    lang="en"
+    className={`${poppins.className} h-full antialiased`}
+    suppressHydrationWarning>
+    <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-300">
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="light"
+        enableSystem={false}>
+          <Navbar />
+          {children}
+          <Footer />
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

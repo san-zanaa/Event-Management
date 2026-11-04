@@ -58,11 +58,18 @@ export default function SignupPage({ className, ...props }: React.ComponentProps
         }
     }
 
+    const handleGithubLogin = async () => {
+        await authClient.signIn.social({
+            provider: "github",
+            callbackURL: "/create-event",
+        });
+    };
+
     return (
-        <div className="flex min-h-screen w-full items-center justify-center bg-gray-50 p-6 md:p-12">
-            <div className="w-full max-w-sm p-2">
+        <div className="flex min-h-screen w-full items-center justify-center bg-gray-50 p-6 md:p-12 dark:bg-[#15171D]">
+            <div className="w-full max-w-sm p-2 ">
                 <div className={cn("flex flex-col items-center", className)}>
-                    <Card className="w-full max-w-[380px] border-none shadow-lg rounded-2xl bg-white">
+                    <Card className="w-full max-w-[380px] border-none shadow-lg rounded-2xl bg-white dark:bg-[#1B1E26]">
 
                         <CardHeader className="items-center text-center pb-4">
 
@@ -70,11 +77,11 @@ export default function SignupPage({ className, ...props }: React.ComponentProps
                                 <Image src={"/images/Sociallogo.png"} alt='logo' height={50} width={50} className='w-10 h-12 object-contain' />
                             </div>
 
-                            <CardTitle className="text-2xl font-bold text-gray-900">
+                            <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
                                 Create Account
                             </CardTitle>
 
-                            <CardDescription className="text-xs text-gray-500">
+                            <CardDescription className="text-xs text-gray-500 dark:text-gray-400">
                                 Join the community and start driving social change
                             </CardDescription>
 
@@ -185,6 +192,21 @@ export default function SignupPage({ className, ...props }: React.ComponentProps
                                         {loading ? "Creating Account..." : "Register"}
                                         {!loading && <ArrowRight size={15} />}
                                     </Button>
+
+                                    <div className="flex items-center gap-3">
+                                        <div className="h-px flex-1 bg-slate-200 dark:bg-gray-700" />
+                                        <span className="text-xs text-slate-400">OR</span>
+                                        <div className="h-px flex-1 bg-slate-200 dark:bg-gray-700" />
+                                    </div>
+
+                                    
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            onClick={handleGithubLogin}
+                                            className="h-12 w-full cursor-pointer rounded-xl border-slate-200 bg-white text-sm font-semibold text-gray-800 transition hover:bg-gray-100 dark:border-gray-700 dark:bg-[#222630] dark:text-white dark:hover:bg-[#292D38]">
+                                            Continue with GitHub
+                                        </Button>
 
                                     <FieldDescription className="text-center text-xs text-gray-500 mt-1">
                                         Already have an account?{" "}

@@ -29,13 +29,13 @@ const features = [
 
 export default function Features() {
     return (
-        <section className="bg-[#F5F7F2] py-20 md:py-24 px-5">
+        <section className="bg-[#F5F7F2] dark:bg-[#1B1E26] py-20 md:py-24 px-5">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center max-w-xl mx-auto mb-14">
                     <span className="text-sm font-semibold tracking-[0.2em] text-[#0ead69] uppercase">
                         Why Choose Us
                     </span>
-                    <h2 className="text-3xl md:text-2xl lg:text-3xl font-bold text-[#17251C] mt-2 leading-tight">
+                    <h2 className="text-3xl md:text-2xl lg:text-3xl font-bold text-[#17251C] mt-2 leading-tight dark:text-gray-300">
                         Bring People Together
                     </h2>
                     <p className="text-[#68756C] mt-1 text-base md:text-sm leading-relaxed">
@@ -45,24 +45,24 @@ export default function Features() {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 dark:bg-[#222630]">
                     {features.map((feature, index) => {
                         const Icon = feature.icon;
 
                         return (
                             <div
                                 key={index}
-                                className="group bg-white border border-[#E5EAE3] rounded-2xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 items-center">
+                                className="group bg-white border border-[#E5EAE3] dark:border-gray-500 rounded-2xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 items-center dark:bg-[#353841]">
                                 <div className="w-12 h-12 rounded-xl bg-[#EAF2EA] flex items-center justify-center mb-6">
                                     <Icon
                                         size={24}
                                         className="text-[#0ead69]"
                                         strokeWidth={1.8}/>
                                 </div>
-                                <h3 className="text-lg font-semibold text-[#17251C] mb-3">
+                                <h3 className="text-lg font-semibold text-[#17251C] mb-3 dark:text-gray-300">
                                     {feature.title}
                                 </h3>
-                                <p className="text-sm text-[#68756C] leading-relaxed">
+                                <p className="text-sm text-[#68756C] leading-relaxed dark:text-gray-400">
                                     {feature.description}
                                 </p>
                             </div>

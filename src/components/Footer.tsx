@@ -7,7 +7,7 @@ export default function Footer() {
     return (
         <footer>
 
-            <div className="mx-auto max-w-7xl px-5 pt-14 pb-8 md:px-8 border-t">
+            <div className="mx-auto max-w-7xl px-5 pt-14 pb-8 md:px-8 border-t dark:bg-[#101116]">
                 <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
                     <div>
                         <div className='flex gap-1'>

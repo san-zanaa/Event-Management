@@ -128,7 +128,7 @@ export default function JoinedEventsPage() {
 
     if (sessionLoading || loading) {
         return (
-            <div className="flex min-h-[70vh] items-center justify-center bg-[#f7faf8]">
+            <div className="flex min-h-[70vh] items-center justify-center bg-[#f7faf8] dark:bg-[#15171D]">
                 <div className="text-center">
                     <Loader2 className="mx-auto mb-4 h-10 w-10 animate-spin text-emerald-600" />
 
@@ -142,13 +142,13 @@ export default function JoinedEventsPage() {
 
     if (!userEmail) {
         return (
-            <div className="flex min-h-[70vh] items-center justify-center bg-[#f7faf8] px-4">
-                <div className="w-full max-w-md rounded-3xl border border-gray-100 bg-white p-10 text-center shadow-sm">
+            <div className="flex min-h-[70vh] items-center justify-center bg-[#f7faf8] px-4 dark:bg-[#15171D]">
+                <div className="w-full max-w-md rounded-3xl border border-gray-100 bg-white p-10 text-center shadow-sm dark:bg-[#222630] dark:border-gray-600">
                     <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50">
                         <LogIn className="h-8 w-8 text-emerald-600" />
                     </div>
 
-                    <h2 className="text-2xl font-bold text-gray-900">
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-300">
                         Login Required
                     </h2>
 
@@ -159,8 +159,7 @@ export default function JoinedEventsPage() {
 
                     <Link
                         href="/login"
-                        className="mt-7 inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-6 py-3 font-semibold text-white transition hover:bg-emerald-800"
-                    >
+                        className="mt-7 inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-6 py-3 font-semibold text-white transition hover:bg-emerald-800">
                         Login Now
                         <ArrowRight size={18} />
                     </Link>
@@ -170,7 +169,7 @@ export default function JoinedEventsPage() {
     }
 
     return (
-        <main className="min-h-screen bg-[#f7faf8] pb-20">
+        <main className="min-h-screen bg-[#f7faf8] pb-20 dark:bg-[#15171D]">
 
             <section className="relative overflow-hidden bg-[#103c2d]">
                 <div className="absolute -right-20 -top-32 h-80 w-80 rounded-full bg-emerald-400/10 blur-3xl" />
@@ -215,13 +214,13 @@ export default function JoinedEventsPage() {
             <section className="mx-auto max-w-7xl px-5 pt-10 md:px-8 md:pt-14">
 
                 <div className="mb-12">
-                    <div className="flex max-w-sm items-center justify-between rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+                    <div className="flex max-w-sm items-center justify-between rounded-2xl border border-gray-100 bg-white p-6 shadow-sm dark:bg-[#1B1E26]">
                         <div>
-                            <p className="text-sm font-medium text-gray-500">
+                            <p className="text-sm font-medium text-gray-400">
                                 Total Joined Events
                             </p>
 
-                            <h3 className="mt-2 text-3xl font-bold text-gray-900">
+                            <h3 className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">
                                 {events.length}
                             </h3>
                         </div>
@@ -241,11 +240,11 @@ export default function JoinedEventsPage() {
                         Your Participation
                     </p>
 
-                    <h2 className="text-2xl font-bold text-gray-900 md:text-3xl">
+                    <h2 className="text-2xl font-bold text-gray-900 md:text-3xl dark:text-white">
                         My Joined Events
                     </h2>
 
-                    <p className="mt-2 text-sm text-gray-500">
+                    <p className="mt-2 text-sm text-gray-400">
                         Manage and keep track of the community events
                         you have joined.
                     </p>
@@ -258,11 +257,11 @@ export default function JoinedEventsPage() {
                 )}
 
                 {events.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-6">
+                    <div className="grid grid-cols-1 gap-6 dark:bg-[#1B1E26]">
                         {events.map((event) => (
                             <div
                                 key={event._id}
-                                className="flex flex-col sm:flex-row gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm hover:shadow-md transition">
+                                className="flex flex-col sm:flex-row gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm hover:shadow-md transition dark:bg-[#222630]">
                                 <div className="relative h-52 w-full sm:h-44 sm:w-48 shrink-0 overflow-hidden rounded-xl">
                                     {event.image && (
                                         <Image
@@ -288,31 +287,31 @@ export default function JoinedEventsPage() {
                                             </span>
                                         </div>
 
-                                        <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+                                        <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
                                             {event.title}
                                         </h2>
 
-                                        <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-600">
+                                        <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-400">
                                             <span className="flex items-center gap-1.5">
-                                                <CalendarDays size={16} className="text-emerald-700" />
+                                                <CalendarDays size={16} className="text-emerald-600" />
                                                 {event.date}
                                             </span>
 
                                             <span className="flex items-center gap-1.5">
-                                                <Clock size={16} className="text-emerald-700" />
+                                                <Clock size={16} className="text-emerald-600" />
                                                 {event.time}
                                             </span>
                                         </div>
 
-                                        <p className="mt-2 flex items-center gap-1.5 text-sm text-gray-600">
-                                            <MapPin size={16} className="shrink-0 text-emerald-700" />
+                                        <p className="mt-2 flex items-center gap-1.5 text-sm text-gray-400">
+                                            <MapPin size={16} className="shrink-0 text-emerald-600" />
                                             {event.location}
                                         </p>
                                     </div>
 
-                                    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-gray-100 pt-3">
-                                        <p className="flex items-center gap-2 text-sm font-medium text-gray-600">
-                                            <Users size={17} className="text-emerald-700" />
+                                    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-gray-100 pt-3 dark:border-gray-600">
+                                        <p className="flex items-center gap-2 text-sm font-medium text-gray-400">
+                                            <Users size={17} className="text-emerald-600" />
                                             {event.volunteerCount ?? 0} Volunteers Joined
                                         </p>
 

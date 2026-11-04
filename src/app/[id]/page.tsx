@@ -222,7 +222,7 @@ export default function EventDetailsPage({ params }: PageProps) {
 
     if (loading || !id) {
         return (
-            <main className="min-h-screen flex items-center justify-center bg-[#f7faf9]">
+            <main className="min-h-screen flex items-center justify-center bg-[#f7faf9] dark:bg-[#15171D]">
                 <p className="text-lg font-semibold text-emerald-700">
                     Loading event...
                 </p>
@@ -232,7 +232,7 @@ export default function EventDetailsPage({ params }: PageProps) {
 
     if (!event) {
         return (
-            <main className="min-h-screen bg-[#f7faf9] flex items-center justify-center px-5">
+            <main className="min-h-screen bg-[#f7faf9] flex items-center justify-center px-5 dark:bg-[#15171D]">
                 <div className="text-center">
                     <div className='flex gap-1 justify-center items-center'>
                         <Image src={"/images/Sociallogo.png"} alt='logo' height={50} width={50} className='w-10 h-12 object-contain' />
@@ -257,7 +257,7 @@ export default function EventDetailsPage({ params }: PageProps) {
     }
 
     return (
-        <main className="min-h-screen bg-[#f6f9f8] py-8 px-4 sm:px-6 lg:px-8">
+        <main className="min-h-screen bg-[#f6f9f8] py-8 px-4 sm:px-6 lg:px-8 dark:bg-[#15171D]">
             <div className="max-w-7xl mx-auto">
                 <Link
                     href="/upcoming-events"
@@ -266,7 +266,7 @@ export default function EventDetailsPage({ params }: PageProps) {
                     Back to Events
                 </Link>
 
-                <div className="overflow-hidden rounded-3xl bg-white border border-gray-100 shadow-[0_12px_45px_rgba(0,0,0,0.06)]">
+                <div className="overflow-hidden rounded-3xl bg-white border border-gray-100 dark:border-gray-600 shadow-[0_12px_45px_rgba(0,0,0,0.06)] dark:bg-[#1B1E26]">
                     <section className="relative h-[330px] sm:h-[400px] lg:h-[440px]">
                         <Image
                             src={event.image}
@@ -319,10 +319,10 @@ export default function EventDetailsPage({ params }: PageProps) {
                         </div>
                     </section>
 
-                    <div className="p-5 sm:p-8 lg:p-10">
+                    <div className="p-5 sm:p-8 lg:p-10 ">
 
-                        <section className="mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-5 rounded-2xl border border-emerald-100 bg-gradient-to-r from-emerald-50 to-teal-50 p-5 sm:p-6">
-                            <div className="flex items-center gap-4">
+                        <section className="mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-5 rounded-2xl border border-emerald-100 bg-gradient-to-r from-emerald-50 to-teal-50 p-5 sm:p-6 dark:bg-gray-600">
+                            <div className="flex items-center gap-4 ">
                                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white text-emerald-600 shadow-sm">
                                     <Users size={27} />
                                 </div>
@@ -383,18 +383,18 @@ export default function EventDetailsPage({ params }: PageProps) {
                                 <section>
                                     <div className="flex items-center gap-3 mb-4">
                                         <div className="h-9 w-1 rounded-full bg-emerald-500" />
-                                        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                                        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                                             About This Social Initiative
                                         </h2>
                                     </div>
 
-                                    <p className="text-[15px] leading-8 text-gray-600">
+                                    <p className="text-[15px] leading-8 text-gray-400">
                                         {event.about || event.description}
                                     </p>
                                 </section>
 
                                 <section>
-                                    <h2 className="text-lg font-bold text-gray-900 mb-5">
+                                    <h2 className="text-lg font-bold text-gray-900 mb-5 dark:text-white">
                                         Our Objectives
                                     </h2>
 
@@ -402,12 +402,12 @@ export default function EventDetailsPage({ params }: PageProps) {
                                         {(event.objectives ?? []).map((objective, index) => (
                                             <div
                                                 key={index}
-                                                className="flex items-start gap-3 rounded-xl border border-gray-100 bg-gray-50/70 p-4">
-                                                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                                                className="flex items-start gap-3 rounded-xl border border-gray-400 dark:border-gray-600 bg-gray-50/70 p-4 dark:bg-gray-800">
+                                                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
                                                     <Check size={15} />
                                                 </span>
 
-                                                <p className="text-sm leading-6 text-gray-600">
+                                                <p className="text-sm leading-6 text-gray-500 dark:text-gray-400">
                                                     {objective}
                                                 </p>
                                             </div>
@@ -416,7 +416,7 @@ export default function EventDetailsPage({ params }: PageProps) {
                                 </section>
 
                                 <section>
-                                    <h2 className="text-lg font-bold text-gray-900 mb-5">
+                                    <h2 className="text-lg font-bold text-gray-900 mb-5 dark:text-white">
                                         Volunteer Guidelines
                                     </h2>
 
@@ -427,7 +427,7 @@ export default function EventDetailsPage({ params }: PageProps) {
                                                 className="flex items-start gap-3">
                                                 <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-emerald-500" />
 
-                                                <p className="text-sm leading-7 text-gray-600">
+                                                <p className="text-sm leading-7 text-gray-400">
                                                     {guideline}
                                                 </p>
                                             </div>
@@ -435,18 +435,18 @@ export default function EventDetailsPage({ params }: PageProps) {
                                     </div>
                                 </section>
 
-                                <section className="border-t border-gray-100 pt-7">
-                                    <h2 className="text-lg font-bold text-gray-900 mb-5">
+                                <section className="border-t border-gray-100 pt-7 dark:border-gray-600">
+                                    <h2 className="text-lg font-bold text-gray-900 mb-5 dark:text-white">
                                         Event Location
                                     </h2>
 
-                                    <div className="flex items-center gap-4 rounded-2xl border border-gray-100 p-5">
+                                    <div className="flex items-center gap-4 rounded-2xl border border-gray-100 p-5  dark:border-gray-600">
                                         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
                                             <MapPin size={23} />
                                         </div>
 
                                         <div>
-                                            <h3 className="font-semibold text-gray-800">
+                                            <h3 className="font-semibold text-gray-800 dark:text-gray-300">
                                                 {event.location}
                                             </h3>
 
@@ -459,7 +459,7 @@ export default function EventDetailsPage({ params }: PageProps) {
                             </div>
 
                             <aside className="space-y-6">
-                                <section className="rounded-2xl border border-gray-200 p-6">
+                                <section className="rounded-2xl border border-gray-200 p-6 dark:border-gray-600">
                                     <div className="mb-6 flex items-center justify-between">
                                         <h3 className="text-sm font-bold uppercase tracking-wide text-gray-500">
                                             Initiative Organizer
@@ -481,7 +481,7 @@ export default function EventDetailsPage({ params }: PageProps) {
                                         </div>
 
                                         <div className="min-w-0">
-                                            <h4 className="truncate font-bold text-gray-900">
+                                            <h4 className="truncate font-bold text-gray-900 dark:text-gray-400">
                                                 {event.organizer?.name || "Event Organizer"}
                                             </h4>
 
@@ -494,19 +494,19 @@ export default function EventDetailsPage({ params }: PageProps) {
                                         </div>
                                     </div>
                                     {event.organizer?.verified && (
-                                        <div className="mt-5 flex items-center gap-2 border-t border-gray-100 pt-4 text-xs font-medium text-emerald-700">
+                                        <div className="mt-5 flex items-center gap-2 border-t border-gray-100 pt-4 text-xs font-medium text-emerald-600 dark:border-gray-600">
                                             <ShieldCheck size={16} />
                                             Verified Platform Member
                                         </div>
                                     )}
                                 </section>
 
-                                <section className="rounded-2xl border border-gray-200 p-6">
+                                <section className="rounded-2xl border border-gray-200 p-6 dark:border-gray-600">
                                     <div className="mb-5 flex items-center justify-between">
                                         <h3 className="text-sm font-bold uppercase tracking-wide text-gray-500">
                                             Confirmed Volunteers
                                         </h3>
-                                        <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
+                                        <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-600">
                                             {volunteerCount}
                                         </span>
                                     </div>
@@ -529,7 +529,7 @@ export default function EventDetailsPage({ params }: PageProps) {
                                                     </div>
 
                                                     <div className="min-w-0">
-                                                        <p className="truncate text-sm font-semibold text-gray-800">
+                                                        <p className="truncate text-sm font-semibold text-gray-800 dark:text-gray-400">
                                                             {volunteer.name}
                                                         </p>
 

@@ -16,7 +16,7 @@ export default function Newsletter() {
     };
 
     return (
-        <section className="bg-[#F8FAFC] px-5 py-16 md:py-16">
+        <section className="bg-[#F8FAFC] dark:bg-[#1B1E26] px-5 py-16 md:py-16">
             <div className="mx-auto max-w-4xl">
                 <div className="relative overflow-hidden rounded-3xl border border-white bg-gradient-to-br from-[#0dce7a] via-white to-[#E6F3ED] px-6 py-12 text-center shadow-[0_8px_30px_rgba(23,74,53,0.05)] backdrop-blur-xl md:px-12 md:py-16">
                     <div className="pointer-events-none absolute -left-20 -top-20 h-56 w-56 rounded-full bg-[#80C9AE]/20 blur-[80px]" />

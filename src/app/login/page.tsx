@@ -62,17 +62,17 @@ export default function LoginPage() {
     }
   }
 
-  const handleGoogleSignUp = async () => {
-        await authClient.signIn.social({
-            provider: "google",
-            callbackURL: "/",
-        })
-    }
+  const handleGithubLogin = async () => {
+    await authClient.signIn.social({
+      provider: "github",
+      callbackURL: "/create-event",
+    });
+  };
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-gray-50 p-6 md:p-12">
+    <div className="flex min-h-screen w-full items-center justify-center bg-gray-50 p-6 md:p-12 dark:bg-[#15171D]">
       <div className="w-full max-w-sm p-2">
-        <div className={cn("flex flex-col gap-6")}>
+        <div className={cn("flex flex-col gap-6 ")}>
           <Card>
             <CardHeader>
               <CardTitle>Login to your account</CardTitle>
@@ -114,7 +114,7 @@ export default function LoginPage() {
                         Forgot your password?
                       </a>
                     </div>
-                    <div className="relative">
+                    <div className="relative mb-4">
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
                       <Input
                         id="password"
@@ -142,21 +142,24 @@ export default function LoginPage() {
                     <Button
                       type="submit"
                       disabled={loading}
-                      className="bg-[#0ead69] hover:bg-[#07c573] mb-2 cursor-pointer">
+                      className="bg-[#0ead69] hover:bg-[#07c573] mb-3 cursor-pointer">
                       {loading ? "Logging in..." : "Login"}
                       {!loading && (
                         <ArrowRight className="h-4 w-4" />
                       )}
                     </Button>
 
-                    <p className="flex justify-center items-center text-xs text-gray-500 mb-2">
-                      OR CONTINUE WITH
-                    </p>
-                    <Button onClick={handleGoogleSignUp}
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="h-px flex-1 bg-slate-200 dark:bg-gray-700" />
+                      <span className="text-xs text-slate-400">OR</span>
+                      <div className="h-px flex-1 bg-slate-200 dark:bg-gray-700" />
+                    </div>
+
+                    <Button onClick={handleGithubLogin}
                       variant="outline"
                       type="button"
                       className="cursor-pointer mb-1">
-                      Continue with Google
+                      Continue with Github
                     </Button>
 
                     <FieldDescription className="text-center">

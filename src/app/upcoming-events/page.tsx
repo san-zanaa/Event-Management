@@ -24,7 +24,7 @@ export default function UpcomingEvents() {
     }, []);
 
     return (
-        <section className="w-full bg-slate-50 py-16 md:py-20">
+        <section className="w-full bg-slate-50 py-16 md:py-20 dark:bg-[#15171D]">
             <div className="mx-auto max-w-7xl px-5 md:px-8">
 
                 <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
@@ -35,7 +35,7 @@ export default function UpcomingEvents() {
                                 Upcoming Initiatives
                             </span>
                         </div>
-                        <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
+                        <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 md:text-2xl dark:text-gray-300">
                             Find Your Next Opportunity to Make a Difference
                         </h2>
                         <p className="mt-3 text-sm text-slate-500 md:text-base">

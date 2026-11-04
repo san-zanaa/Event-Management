@@ -24,7 +24,7 @@ export default function Upcoming() {
     }, []);
 
     return (
-        <section className="w-full bg-slate-50 py-16 md:py-20">
+        <section className="w-full bg-slate-50 dark:bg-[#15171D] py-16 md:py-20">
             <div className="mx-auto max-w-7xl px-5 md:px-8">
                 <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
                     <div>

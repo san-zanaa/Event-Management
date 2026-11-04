@@ -114,28 +114,28 @@ export default function CreateEventPage() {
     };
 
     return (
-        <div className="min-h-screen w-full bg-[#f7f9fb] px-4 py-5 md:px-8 md:py-8">
+        <div className="min-h-screen w-full bg-[#f7f9fb] dark:bg-[#15171D] px-4 py-5 md:px-8 md:py-8">
             <div className="mx-auto max-w-[720px]">
                 <Link
                     href="/upcoming-events"
-                    className="mb-7 inline-flex items-center gap-2 text-xs font-medium text-slate-500 transition hover:text-[#0ead69]">
+                    className="mb-7 inline-flex items-center gap-2 text-xs font-medium text-slate-500 transition hover:text-[#0ead69] dark:text-gray-300">
                     <ArrowLeft size={15} />
                     Back to Upcoming Events
                 </Link>
 
-                <Card className="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-[0_8px_25px_rgba(0,0,0,0.05)]">
-                    <CardContent className="p-5 sm:p-7 md:p-10">
+                <Card className="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-[0_8px_25px_rgba(0,0,0,0.05)] dark:bg-[#1B1E26]">
+                    <CardContent className="p-5 sm:p-7 md:p-10 dark:bg-[#1B1E26]">
                         <div className="mb-9">
                             <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-[#eaf8f5] px-3 py-1 text-xs font-semibold text-[#0ead69]">
                                 <Sparkles size={13} />
                                 Social Service Drive
                             </div>
 
-                            <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
+                            <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl dark:text-white">
                                 Create a Community Event
                             </h1>
 
-                            <p className="mt-2 text-sm leading-6 text-slate-500">
+                            <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-gray-400">
                                 Organize a local relief effort, environmental cleanup or community support drive.
                             </p>
                         </div>
@@ -145,7 +145,7 @@ export default function CreateEventPage() {
                                 <Field className="gap-1.5">
                                     <FieldLabel
                                         htmlFor="title"
-                                        className="text-xs font-semibold text-slate-800">
+                                        className="text-xs font-semibold text-slate-500 ">
                                         Event Title <span className="text-red-500">*</span>
                                     </FieldLabel>
                                     <div className="relative">
@@ -166,7 +166,7 @@ export default function CreateEventPage() {
                                     <Field className="gap-1.5">
                                         <FieldLabel
                                             htmlFor="eventType"
-                                            className="text-xs font-semibold text-slate-800">
+                                            className="text-xs font-semibold text-slate-500">
                                             Event Type <span className="text-red-500">*</span>
                                         </FieldLabel>
                                         <div className="relative">
@@ -178,7 +178,7 @@ export default function CreateEventPage() {
                                                 value={eventType}
                                                 onChange={(e) => setEventType(e.target.value)}
                                                 required
-                                                className="h-11 w-full cursor-pointer appearance-none rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3 text-sm text-slate-800 shadow-sm outline-none transition focus:border-[#0ead69] focus:ring-2 focus:ring-[#0ead69]/20">
+                                                className="h-11 w-full cursor-pointer appearance-none rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3 text-sm 5 shadow-sm outline-none transition focus:border-[#0ead69] focus:ring-2 focus:ring-[#0ead69]/20 dark:bg-[#1B1E26] text-slate-400">
                                                 {eventTypes.map((type) => (
                                                     <option key={type} value={type}>
                                                         {type}
@@ -191,7 +191,7 @@ export default function CreateEventPage() {
                                     <Field className="gap-1.5">
                                         <FieldLabel
                                             htmlFor="date"
-                                            className="text-xs font-semibold text-slate-800">
+                                            className="text-xs font-semibold 5 text-slate-500">
                                             Event Date <span className="text-red-500">*</span>
                                         </FieldLabel>
                                         <div className="relative">
@@ -204,7 +204,7 @@ export default function CreateEventPage() {
                                                 type="date"
                                                 min={minDate}
                                                 required
-                                                className="h-11 rounded-xl border-slate-200 bg-slate-50 pl-10 text-sm shadow-sm focus-visible:border-[#0ead69] focus-visible:ring-[#0ead69]" />
+                                                className="h-11 rounded-xl border-slate-200 bg-slate-50 pl-10 text-sm shadow-sm text-slate-400 focus-visible:border-[#0ead69] focus-visible:ring-[#0ead69]" />
                                         </div>
                                         <FieldDescription className="text-[10px] text-slate-400">
                                             Dates must be in the future (today or later)
@@ -215,7 +215,7 @@ export default function CreateEventPage() {
                                 <Field className="gap-1.5">
                                     <FieldLabel
                                         htmlFor="location"
-                                        className="text-xs font-semibold text-slate-800">
+                                        className="text-xs font-semibold 5 text-slate-500">
                                         Location / Venue <span className="text-red-500">*</span>
                                     </FieldLabel>
                                     <div className="relative">
@@ -235,7 +235,7 @@ export default function CreateEventPage() {
                                 <Field className="gap-1.5">
                                     <FieldLabel
                                         htmlFor="image"
-                                        className="text-xs font-semibold text-slate-800">
+                                        className="text-xs font-semibold 5 text-slate-500">
                                         Thumbnail Image URL <span className="text-red-500">*</span>
                                     </FieldLabel>
                                     <div className="relative">
@@ -275,7 +275,7 @@ export default function CreateEventPage() {
                                 <Field className="gap-1.5">
                                     <FieldLabel
                                         htmlFor="description"
-                                        className="text-xs font-semibold text-slate-800">
+                                        className="text-xs font-semibold 5 text-slate-500">
                                         Event Description <span className="text-red-500">*</span>
                                     </FieldLabel>
                                     <Textarea
@@ -286,11 +286,11 @@ export default function CreateEventPage() {
                                         className="min-h-[125px] resize-y rounded-xl border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-6 shadow-sm focus-visible:border-[#0ead69] focus-visible:ring-[#0ead69]" />
                                 </Field>
 
-                                <div className="flex flex-col gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
-                                    <span className="text-xs text-slate-500">
+                                <div className="flex flex-col gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 sm:flex-row sm:items-center sm:justify-between dark:bg-[#1B1E26]">
+                                    <span className="text-xs text-slate-400">
                                         Organizer Email attached:
                                     </span>
-                                    <span className="break-all text-xs font-semibold text-slate-800">
+                                    <span className="break-all text-xs font-semibold 5 text-slate-400">
                                         {userEmail || "Login to attach your email"}
                                     </span>
                                 </div>

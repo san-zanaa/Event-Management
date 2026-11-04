@@ -47,7 +47,7 @@ export default function CommunityGallery() {
     };
 
     return (
-        <section className="bg-[#F2FAEE] py-16 md:py-20">
+        <section className="bg-[#F2FAEE] py-16 md:py-2 dark:bg-[#1B1E26]">
             <div className="mx-auto max-w-7xl px-5 md:px-8">
                 <div className="mb-10 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
                     <div>
