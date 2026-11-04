@@ -8,23 +8,25 @@ import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, CalendarDays, MapPin, Image as ImageIcon, Tag, Type, Sparkles, PlusCircle } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 const photoPresets = [
     {
         name: "Winter Clothes",
-        url: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=900&q=85",
+        url: "http://localhost:5000/uploads/winter-clothes.jpg",
     },
     {
         name: "Blanket Relief",
-        url: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=900&q=85",
+        url: "http://localhost:5000/uploads/blanket-relief.jpg",
     },
     {
         name: "Cleanup",
-        url: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=900&q=85",
+        url: "http://localhost:5000/uploads/cleanup.jpg",
     },
     {
         name: "Tree Plantation",
-        url: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=900&q=85",
+        url: "http://localhost:5000/uploads/tree-plantation.jpg",
     },
 ];
 
@@ -47,13 +49,11 @@ const eventTypes = [
     "Other",
 ];
 
-interface CreateEventPageProps {
-    organizerEmail?: string;
-}
 
-export default function CreateEventPage({
-    organizerEmail = "",
-}: CreateEventPageProps) {
+export default function CreateEventPage() {
+    const router = useRouter();
+    const { data: session, isPending } = authClient.useSession();
+    const userEmail = session?.user?.email;
     const [imageUrl, setImageUrl] = useState("");
     const [eventType, setEventType] = useState("Donation");
 
@@ -72,6 +72,13 @@ export default function CreateEventPage({
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+        if (isPending) return;
+
+        if (!userEmail) {
+            alert("Please login first!");
+            return;
+        }
+
         const form = e.currentTarget;
         const formData = new FormData(form);
 
@@ -82,7 +89,7 @@ export default function CreateEventPage({
             location: formData.get("location"),
             image: formData.get("image"),
             description: formData.get("description"),
-            organizerEmail: organizerEmail,
+            organizerEmail: userEmail.trim().toLowerCase(),
         };
         try {
             const res = await fetch("http://localhost:5000/create-event", {
@@ -96,8 +103,10 @@ export default function CreateEventPage({
             if (!res.ok) {
                 throw new Error(data.message || "Failed to create event");
             }
-            console.log("New Event:", data);
             alert("Event created successfully!");
+
+            router.push("/manage-events");
+
         } catch (error) {
             console.error("Error creating event:", error);
             alert("Something went wrong!");
@@ -282,7 +291,7 @@ export default function CreateEventPage({
                                         Organizer Email attached:
                                     </span>
                                     <span className="break-all text-xs font-semibold text-slate-800">
-                                        {organizerEmail || "Login to attach your email"}
+                                        {userEmail || "Login to attach your email"}
                                     </span>
                                 </div>
                                 <Button
