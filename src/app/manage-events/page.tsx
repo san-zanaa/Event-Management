@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { CalendarDays, MapPin, Users, Pencil, Trash2, Plus, Loader2, AlertCircle, Clock, PartyPopper } from "lucide-react";
@@ -57,7 +57,7 @@ export default function ManageEventsPage() {
     const { data: session, isPending } = authClient.useSession();
 
     const [events, setEvents] = useState<Event[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [eventsLoading, setEventsLoading] = useState(true);
     const [error, setError] = useState("");
     const [editingEvent, setEditingEvent] = useState<Event | null>(null);
     const [form, setForm] = useState<EventForm>(initialForm);
@@ -65,43 +65,55 @@ export default function ManageEventsPage() {
     const [saving, setSaving] = useState(false);
     const [deletingId, setDeletingId] = useState<string | null>(null);
 
+    const [minDate, setMinDate] = useState("");
+    useEffect(() => {
+        startTransition(() => {
+            const currentDate = new Date();
+            setMinDate([
+                currentDate.getFullYear(),
+                String(currentDate.getMonth() + 1).padStart(2, "0"),
+                String(currentDate.getDate()).padStart(2, "0"),
+            ].join("-"));
+        });
+    }, []);
+
     const userEmail = session?.user?.email;
-    const currentDate = new Date();
-    const minDate = [
-        currentDate.getFullYear(),
-        String(currentDate.getMonth() + 1).padStart(2, "0"),
-        String(currentDate.getDate()).padStart(2, "0"),
-    ].join("-");
+    const loading = Boolean(userEmail) && eventsLoading;
 
     useEffect(() => {
-        if (isPending) return;
-
-        if (!userEmail) {
-            setLoading(false);
-            return;
-        }
+        if (isPending || !userEmail) return;
 
         const fetchMyEvents = async () => {
             try {
-                setLoading(true);
+                setEventsLoading(true);
                 setError("");
 
-                const response = await fetch(
-                    `http://localhost:5000/my-events/${encodeURIComponent(userEmail)}`,
-                    { cache: "no-store" }
+                const { data: tokenData, error } = await authClient.token();
+
+                if (error || !tokenData?.token) {
+                    throw new Error("Please login first.");
+                }
+                const response = await fetch("http://localhost:5000/my-events",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${tokenData.token}`,
+                        },
+                        cache: "no-store",
+                    }
                 );
 
                 if (!response.ok) {
                     throw new Error("Failed to load your events.");
                 }
-                const data = await response.json();
-                setEvents(Array.isArray(data) ? data : []);
+                const result = await response.json();
+                setEvents(Array.isArray(result) ? result : []);
+
             } catch (err) {
                 setError(
                     err instanceof Error ? err.message : "Something went wrong."
                 );
             } finally {
-                setLoading(false);
+                setEventsLoading(false);
             }
         };
 
@@ -129,99 +141,108 @@ export default function ManageEventsPage() {
     };
 
     const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    e.preventDefault();
 
-        if (!editingEvent || !userEmail) return;
-        if (!form.date || form.date < minDate) {
-            alert("Please select today or a future date.");
-            return;
+    if (!editingEvent || !userEmail) return;
+
+    if (!form.date || form.date < minDate) {
+        alert("Please select today or a future date.");
+        return;
+    }
+
+    try {
+        setSaving(true);
+
+        const { data: tokenData, error } = await authClient.token();
+        if (error || !tokenData?.token) {
+            throw new Error("Please login first.");
         }
-
-        try {
-            setSaving(true);
-            const response = await fetch(
-                `http://localhost:5000/update-event/${editingEvent._id}`,
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        ...form,
-                        dateISO: form.date,
-                        organizerEmail: userEmail,
-                    }),
-                }
-            );
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || "Failed to update event.");
+        const response = await fetch(
+            `http://localhost:5000/update-event/${editingEvent._id}`,
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${tokenData.token}`,
+                },
+                body: JSON.stringify({
+                    ...form,
+                    dateISO: form.date,
+                }),
             }
-
-            setEvents((previousEvents) =>
-                previousEvents.map((event) =>
-                    event._id === editingEvent._id
-                        ? {
-                            ...event,
-                            ...form,
-                            date: form.date,
-                            dateISO: form.date,
-                        }
-                        : event
-                )
-            );
-
-            setEditingEvent(null);
-            setForm(initialForm);
-
-            alert("Event updated successfully!");
-        } catch (err) {
-            alert(
-                err instanceof Error ? err.message : "Something went wrong."
-            );
-        } finally {
-            setSaving(false);
-        }
-    };
-
-    const handleDelete = async (eventId: string) => {
-        if (!userEmail) return;
-
-        const confirmed = window.confirm(
-            "Are you sure you want to delete this event? This action cannot be undone."
         );
 
-        if (!confirmed) return;
-        try {
-            setDeletingId(eventId);
-
-            const response = await fetch(
-                `http://localhost:5000/delete-event/${eventId}?email=${encodeURIComponent(userEmail)}`,
-                {
-                    method: "DELETE",
-                }
-            );
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || "Failed to delete event.");
-            }
-            setEvents((previousEvents) =>
-                previousEvents.filter((event) => event._id !== eventId)
-            );
-
-            alert("Event deleted successfully!");
-        } catch (err) {
-            alert(
-                err instanceof Error ? err.message : "Something went wrong."
-            );
-        } finally {
-            setDeletingId(null);
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.message || "Failed to update event.");
         }
-    };
 
+        setEvents((previousEvents) =>
+            previousEvents.map((event) =>
+                event._id === editingEvent._id
+                    ? {
+                        ...event,
+                        ...form,
+                        date: form.date,
+                        dateISO: form.date,
+                    }
+                    : event
+            )
+        );
+
+        setEditingEvent(null);
+        setForm(initialForm);
+        alert("Event updated successfully!");
+    } catch (err) {
+        alert(
+            err instanceof Error ? err.message : "Something went wrong."
+        );
+    } finally {
+        setSaving(false);
+    }
+};
+    const handleDelete = async (eventId: string) => {
+    if (!userEmail) return;
+    const confirmed = window.confirm(
+        "Are you sure you want to delete this event? This action cannot be undone."
+    );
+    if (!confirmed) return;
+
+    try {
+        setDeletingId(eventId);
+
+        const { data: tokenData, error } = await authClient.token();
+        if (error || !tokenData?.token) {
+            throw new Error("Please login first.");
+        }
+
+        const response = await fetch(
+            `http://localhost:5000/delete-event/${eventId}`,
+            {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${tokenData.token}`,
+                },
+            }
+        );
+
+        const result = await response.json();
+        if (!response.ok) {
+            throw new Error(result.message || "Failed to delete event.");
+        }
+        setEvents((previousEvents) =>
+            previousEvents.filter((event) => event._id !== eventId)
+        );
+        alert("Event deleted successfully!");
+
+    } catch (err) {
+        alert(
+            err instanceof Error ? err.message : "Something went wrong."
+        );
+    } finally {
+        setDeletingId(null);
+    }
+};
     if (isPending || loading) {
         return (
             <div className="flex min-h-[70vh] items-center justify-center">
@@ -330,7 +351,7 @@ export default function ManageEventsPage() {
                         </p>
                     </div>
 
-                </section>
+                </section> 
 
                 <Dialog
                     open={!!editingEvent}
@@ -339,7 +360,7 @@ export default function ManageEventsPage() {
                     }}>
                     <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
                         <DialogHeader>
-                            <DialogTitle className="text-2xl font-bold text-gray-900">
+                            <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-gray-300">
                                 Edit Event Details
                             </DialogTitle>
 
@@ -361,7 +382,7 @@ export default function ManageEventsPage() {
                                         onChange={(e) =>
                                             setForm({ ...form, title: e.target.value })
                                         }
-                                        placeholder="Enter event title"/>
+                                        placeholder="Enter event title" />
                                 </div>
 
                                 <div className="space-y-2">
@@ -393,7 +414,7 @@ export default function ManageEventsPage() {
                                         value={form.date}
                                         onChange={(e) =>
                                             setForm({ ...form, date: e.target.value })
-                                        }/>
+                                        } />
                                 </div>
 
                                 <div className="space-y-2">
@@ -405,7 +426,7 @@ export default function ManageEventsPage() {
                                         value={form.time}
                                         onChange={(e) =>
                                             setForm({ ...form, time: e.target.value })
-                                        }/>
+                                        } />
                                 </div>
 
                                 <div className="space-y-2">
@@ -417,7 +438,7 @@ export default function ManageEventsPage() {
                                         onChange={(e) =>
                                             setForm({ ...form, location: e.target.value })
                                         }
-                                        placeholder="Enter event location"/>
+                                        placeholder="Enter event location" />
                                 </div>
 
                                 <div className="space-y-2">
@@ -430,7 +451,7 @@ export default function ManageEventsPage() {
                                         onChange={(e) =>
                                             setForm({ ...form, image: e.target.value })
                                         }
-                                        placeholder="https://example.com/image.jpg"/>
+                                        placeholder="https://example.com/image.jpg" />
                                 </div>
 
                             </div>
@@ -446,7 +467,7 @@ export default function ManageEventsPage() {
                                         setForm({ ...form, description: e.target.value })
                                     }
                                     placeholder="Describe your event..."
-                                    className="w-full resize-y rounded-md border border-input bg-background px-3 py-3 text-sm outline-none transition placeholder:text-muted-foreground focus-visible:border-emerald-500 focus-visible:ring-2 focus-visible:ring-emerald-500/20"/>
+                                    className="w-full resize-y rounded-md border border-input bg-background px-3 py-3 text-sm outline-none transition placeholder:text-muted-foreground focus-visible:border-emerald-500 focus-visible:ring-2 focus-visible:ring-emerald-500/20" />
                             </div>
 
                             <DialogFooter className="gap-2 pt-2">
@@ -458,7 +479,7 @@ export default function ManageEventsPage() {
                                             disabled={saving}>
                                             Cancel
                                         </Button>
-                                    }/>
+                                    } />
 
                                 <Button
                                     type="submit"
@@ -504,11 +525,11 @@ export default function ManageEventsPage() {
                             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
                                 <CalendarDays size={32} />
                             </div>
-                            <h3 className="mt-5 text-xl font-bold text-gray-900">
+                            <h3 className="mt-5 text-xl font-bold text-gray-900 dark:text-gray-400">
                                 No Events Created Yet
                             </h3>
                             <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500">
-                                You haven't created any events yet. Start making a difference
+                                You haven&apos;t created any events yet. Start making a difference
                                 in your community by creating your first event.
                             </p>
                             <Link
@@ -535,7 +556,7 @@ export default function ManageEventsPage() {
                                                     alt={event.title}
                                                     fill
                                                     unoptimized
-                                                    className="object-cover transition-transform duration-500 group-hover:scale-105"/>
+                                                    className="object-cover transition-transform duration-500 group-hover:scale-105" />
                                             ) : (
                                                 <div className="flex h-full items-center justify-center text-emerald-400">
                                                     <CalendarDays size={45} />

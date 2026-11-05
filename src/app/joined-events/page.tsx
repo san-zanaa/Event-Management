@@ -15,6 +15,7 @@ import {
     CalendarCheck,
     HandHeart,
     LogIn,
+    LogOut,
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 
@@ -38,49 +39,57 @@ export default function JoinedEventsPage() {
         authClient.useSession();
 
     const [events, setEvents] = useState<JoinedEvent[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [eventsLoading, setEventsLoading] = useState(true);
     const [error, setError] = useState("");
     const [leavingId, setLeavingId] = useState<string | null>(null);
 
     const userEmail = session?.user?.email;
+    const loading = sessionLoading || (Boolean(userEmail) && eventsLoading);
 
     useEffect(() => {
-        if (sessionLoading) return;
-
-        if (!userEmail) {
-            setEvents([]);
-            setLoading(false);
-            return;
-        }
+        if (sessionLoading || !userEmail) return;
 
         const fetchJoinedEvents = async () => {
             try {
-                setLoading(true);
+                setEventsLoading(true);
                 setError("");
 
-                const response = await fetch(
-                    `http://localhost:5000/joined-events/${encodeURIComponent(userEmail)}`,
-                    { cache: "no-store" }
-                );
+                const { data, error } = await authClient.token();
 
+                if (error || !data?.token) {
+                    throw new Error("Please login first.");
+                }
+                const response = await fetch("http://localhost:5000/joined-events",
+                    {
+                        method: "GET",
+                        headers: {
+                            Authorization: `Bearer ${data.token}`,
+                        },
+                        cache: "no-store",
+                    }
+                );
                 if (!response.ok) {
                     throw new Error("Failed to load joined events.");
                 }
 
-                const data = await response.json();
+                const result = await response.json();
+                setEvents(Array.isArray(result) ? result : []);
 
-                setEvents(Array.isArray(data) ? data : []);
             } catch (err) {
                 console.error(err);
+
                 setError(
-                    "Unable to load your joined events. Please try again."
+                    err instanceof Error
+                        ? err.message
+                        : "Unable to load your joined events."
                 );
+
             } finally {
-                setLoading(false);
+                setEventsLoading(false);
             }
         };
-
         fetchJoinedEvents();
+
     }, [userEmail, sessionLoading]);
 
     const handleLeaveEvent = async (eventId: string) => {
@@ -94,25 +103,30 @@ export default function JoinedEventsPage() {
 
         try {
             setLeavingId(eventId);
+            const { data, error } = await authClient.token();
 
-            const response = await fetch(
-                `http://localhost:5000/leave-event/${encodeURIComponent(userEmail)}/${eventId}`,
+            if (error || !data?.token) {
+                throw new Error("Please login first.");
+            }
+            const response = await fetch(`http://localhost:5000/leave-event/${eventId}`,
                 {
                     method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${data.token}`,
+                    },
                 }
             );
 
-            const data = await response.json();
-
+            const result = await response.json();
             if (!response.ok) {
                 throw new Error(
-                    data.message || "Failed to leave event."
+                    result.message || "Failed to leave event."
                 );
             }
-
             setEvents((previousEvents) =>
                 previousEvents.filter((event) => event._id !== eventId)
             );
+
         } catch (err) {
             console.error(err);
 
@@ -121,11 +135,11 @@ export default function JoinedEventsPage() {
                     ? err.message
                     : "Something went wrong."
             );
+
         } finally {
             setLeavingId(null);
         }
     };
-
     if (sessionLoading || loading) {
         return (
             <div className="flex min-h-[70vh] items-center justify-center bg-[#f7faf8] dark:bg-[#15171D]">
@@ -315,12 +329,27 @@ export default function JoinedEventsPage() {
                                             {event.volunteerCount ?? 0} Volunteers Joined
                                         </p>
 
-                                        <Link
-                                            href={`/${event._id}`}
-                                            className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800 transition">
-                                            View Event
-                                            <ArrowRight size={16} />
-                                        </Link>
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <button
+                                                type="button"
+                                                onClick={() => handleLeaveEvent(event._id)}
+                                                disabled={leavingId === event._id}
+                                                className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-700 px-5 py-2.5 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-60">
+                                                {leavingId === event._id ? (
+                                                    <Loader2 size={16} className="animate-spin" />
+                                                ) : (
+                                                    <LogOut size={16} />
+                                                )}
+                                                Leave
+                                            </button>
+
+                                            <Link
+                                                href={`/${event._id}`}
+                                                className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800 transition">
+                                                View Event
+                                                <ArrowRight size={16} />
+                                            </Link>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -337,7 +366,7 @@ export default function JoinedEventsPage() {
                         </h3>
 
                         <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-gray-500">
-                            You haven't joined any community events yet.
+                            You haven&apos;t joined any community events yet.
                             Explore upcoming events and become a part of something meaningful.
                         </p>
 

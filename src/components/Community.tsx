@@ -2,7 +2,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MapPin } from "lucide-react";
 
@@ -84,8 +83,7 @@ export default function CommunityGallery() {
                 ) : (
                     <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
                         {events[0] && (
-                            <Link
-                                href={`/events/${events[0]._id}`}
+                            <div
                                 className="group relative h-[260px] overflow-hidden rounded-2xl shadow-md sm:h-[350px] lg:col-span-7 lg:row-span-2 lg:h-[375px]">
                                 <Image
                                     src={getImageUrl(events[0].image)}
@@ -112,13 +110,12 @@ export default function CommunityGallery() {
                                         {events[0].location}
                                     </div>
                                 </div>
-                            </Link>
+                            </div>
                         )}
 
                         {events.slice(1, 3).map((event) => (
-                            <Link
+                            <div
                                 key={event._id}
-                                href={`/events/${event._id}`}
                                 className="group relative h-[220px] overflow-hidden rounded-2xl shadow-md sm:h-[250px] lg:col-span-5 lg:h-[175px]">
                                 <Image
                                     src={getImageUrl(event.image)}
@@ -144,7 +141,7 @@ export default function CommunityGallery() {
                                         </span>
                                     </div>
                                 </div>
-                            </Link>
+                            </div>
                         ))}
                     </div>
                 )}

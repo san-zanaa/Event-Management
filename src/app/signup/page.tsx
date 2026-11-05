@@ -12,7 +12,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 
-export default function SignupPage({ className, ...props }: React.ComponentProps<"div">) {
+export default function SignupPage({ className }: React.ComponentProps<"div">) {
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
     const [password, setPassword] = useState("");

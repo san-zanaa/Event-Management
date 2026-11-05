@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { ArrowRight, Mail, Lock, EyeOff, Eye } from "lucide-react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
-import { useEffect, useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
@@ -22,12 +22,14 @@ export default function LoginPage() {
     const savedEmail = sessionStorage.getItem("signupEmail");
     const savedPassword = sessionStorage.getItem("signupPassword");
 
-    if (savedEmail) {
-      setEmail(savedEmail);
-    }
-    if (savedPassword) {
-      setPassword(savedPassword);
-    }
+    startTransition(() => {
+      if (savedEmail) {
+        setEmail(savedEmail);
+      }
+      if (savedPassword) {
+        setPassword(savedPassword);
+      }
+    });
   }, []);
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

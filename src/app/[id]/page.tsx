@@ -68,7 +68,7 @@ export default function EventDetailsPage({ params }: PageProps) {
     const [loading, setLoading] = useState(true);
 
     const [joined, setJoined] = useState(false);
-    const [volunteerCount, setVolunteerCount] = useState(0);
+    const [volunteerCountDelta, setVolunteerCountDelta] = useState(0);
     const [isJoining, setIsJoining] = useState(false);
 
 
@@ -77,7 +77,6 @@ export default function EventDetailsPage({ params }: PageProps) {
             const resolvedParams = await params;
             setId(resolvedParams.id);
         }
-
         getId();
     }, [params]);
 
@@ -117,51 +116,89 @@ export default function EventDetailsPage({ params }: PageProps) {
 
     const event = events.find(
         (item) => String(item._id ?? item.id) === String(id)
+    )
+    const volunteerCount = Math.max(
+        0,
+        (event?.volunteerCount ?? 0) + volunteerCountDelta
     );
 
     useEffect(() => {
-        if (event) {
-            setVolunteerCount(event.volunteerCount ?? 0);
-        }
-    }, [event]);
+        if (isPending || !session?.user?.email || !event?._id) return;
+
+        const checkJoinedStatus = async () => {
+            try {
+                const { data, error } = await authClient.token();
+
+                if (error || !data?.token) return;
+                const response = await fetch("http://localhost:5000/joined-events",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${data.token}`,
+                        },
+                        cache: "no-store",
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error("Failed to check joined status");
+                }
+
+                const result = await response.json();
+                const alreadyJoined = Array.isArray(result) &&
+                    result.some(
+                        (item) => String(item._id) === String(event._id)
+                    );
+
+                setJoined(alreadyJoined);
+
+            } catch (error) {
+                console.error("Joined status error:", error);
+            }
+        };
+
+        checkJoinedStatus();
+
+    }, [event?._id, session?.user?.email, isPending]);
 
     const handleJoin = async () => {
         if (isPending || isJoining) return;
-
         if (!session?.user?.email) {
             router.push(`/login?redirect=/${id}`);
             return;
         }
-
         if (!event?._id) {
             alert("Event information not found!");
             return;
         }
+
         try {
             setIsJoining(true);
+
+            const { data, error } = await authClient.token();
+            if (error || !data?.token) {
+                throw new Error("Please login first.");
+            }
 
             const response = await fetch("http://localhost:5000/join-events", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    Authorization: `Bearer ${data.token}`,
                 },
                 body: JSON.stringify({
                     eventId: event._id,
-                    userEmail: session.user.email,
                 }),
             });
 
-            const data = await response.json();
-
+            const result = await response.json();
             if (!response.ok) {
-                throw new Error(data.message || "Failed to join event");
+                throw new Error(result.message || "Failed to join event");
             }
 
             setJoined(true);
-            setVolunteerCount((prev) => prev + 1);
+            setVolunteerCountDelta((prev) => prev + 1);
 
             alert("You have successfully joined this event!");
-
             router.push("/joined-events");
 
         } catch (error) {
@@ -171,45 +208,49 @@ export default function EventDetailsPage({ params }: PageProps) {
                 error instanceof Error
                     ? error.message
                     : "Something went wrong!"
-            )
+            );
         } finally {
             setIsJoining(false);
         }
-    }
-
+    };
     const handleLeave = async () => {
         if (!session?.user?.email || !event?._id || isJoining) return;
 
         const confirmed = window.confirm(
             "Are you sure you want to leave this event?"
         );
-
         if (!confirmed) return;
 
         try {
             setIsJoining(true);
 
+            const { data, error } = await authClient.token();
+            if (error || !data?.token) {
+                throw new Error("Please login first.");
+            }
+
             const response = await fetch(
-                `http://localhost:5000/leave-event/${encodeURIComponent(session.user.email)}/${event._id}`,
+                `http://localhost:5000/leave-event/${event._id}`,
                 {
                     method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${data.token}`,
+                    },
                 }
             );
 
-            const data = await response.json();
-
+            const result = await response.json();
             if (!response.ok) {
-                throw new Error(data.message || "Failed to leave event");
+                throw new Error(result.message || "Failed to leave event");
             }
 
             setJoined(false);
-            setVolunteerCount((prev) => Math.max(0, prev - 1));
+            setVolunteerCountDelta((prev) => prev - 1);
 
             alert("You have successfully left this event!");
 
         } catch (error) {
             console.error("Leave event error:", error);
-
             alert(
                 error instanceof Error
                     ? error.message
@@ -351,8 +392,8 @@ export default function EventDetailsPage({ params }: PageProps) {
                                     onClick={joined ? handleLeave : handleJoin}
                                     disabled={isPending || isJoining}
                                     className={`flex flex-1 sm:flex-none items-center justify-center gap-2 rounded-xl px-6 py-3.5 font-semibold text-white transition ${joined
-                                            ? "bg-gray-700 hover:bg-gray-800"
-                                            : "bg-emerald-600 hover:bg-emerald-700"
+                                        ? "bg-gray-700 hover:bg-gray-800"
+                                        : "bg-emerald-600 hover:bg-emerald-700"
                                         }`}
                                 >
                                     {isPending
@@ -558,7 +599,7 @@ export default function EventDetailsPage({ params }: PageProps) {
                                     </h3>
 
                                     <p className="mt-3 text-sm leading-6 text-emerald-100/80">
-                                        Your time and kindness can make a real difference in someone's life.
+                                        Your time and kindness can make a real difference in someone&apos;s life.
                                     </p>
                                 </section>
                             </aside>

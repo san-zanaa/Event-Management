@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, CalendarDays, MapPin, Image as ImageIcon, Tag, Type, Sparkles, PlusCircle } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+
 
 const photoPresets = [
     {
@@ -52,7 +53,7 @@ const eventTypes = [
 
 export default function CreateEventPage() {
     const router = useRouter();
-    const { data: session, isPending } = authClient.useSession();
+    const { data: session } = authClient.useSession();
     const userEmail = session?.user?.email;
     const [imageUrl, setImageUrl] = useState("");
     const [eventType, setEventType] = useState("Donation");
@@ -61,55 +62,62 @@ export default function CreateEventPage() {
     const update = (field: keyof typeof form, value: string) =>
         setForm((current) => ({ ...current, [field]: value }))
 
-    const today = new Date();
-    const minDate = [
-        today.getFullYear(),
-        String(today.getMonth() + 1).padStart(2, "0"),
-        String(today.getDate()).padStart(2, "0"),
-    ].join("-");
+    const [minDate, setMinDate] = useState("");
+    useEffect(() => {
+        startTransition(() => {
+            const today = new Date();
+            setMinDate([
+                today.getFullYear(),
+                String(today.getMonth() + 1).padStart(2, "0"),
+                String(today.getDate()).padStart(2, "0"),
+            ].join("-"));
+        });
+    }, []);
 
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (isPending) return;
-
-        if (!userEmail) {
-            alert("Please login first!");
-            return;
-        }
-
-        const form = e.currentTarget;
-        const formData = new FormData(form);
-
-        const eventData = {
-            title: formData.get("title"),
-            category: eventType,
-            date: formData.get("date"),
-            location: formData.get("location"),
-            image: formData.get("image"),
-            description: formData.get("description"),
-            organizerEmail: userEmail.trim().toLowerCase(),
-        };
         try {
+            const { data, error } = await authClient.token();
+
+            console.log("JWT Token:", data?.token);
+            console.log("JWT Error:", error);
+
+            if (error || !data?.token) {
+                throw new Error("JWT token not found. Please login again.");
+            }
+
+            const eventData = {
+                ...form,
+                category: eventType,
+                image: imageUrl,
+            };
+
             const res = await fetch("http://localhost:5000/create-event", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${data.token}`,
                 },
                 body: JSON.stringify(eventData),
             });
-            const data = await res.json();
-            if (!res.ok) {
-                throw new Error(data.message || "Failed to create event");
-            }
-            alert("Event created successfully!");
 
-            router.push("/manage-events");
+            const result = await res.json();
+
+            if (!res.ok) {
+                throw new Error(result.message || "Failed to create event");
+            }
+
+            alert("Event created successfully!");
+            setForm(initialForm);
+            setImageUrl("");
+            setEventType("Donation");
+            router.push("/upcoming-events");
 
         } catch (error) {
             console.error("Error creating event:", error);
-            alert("Something went wrong!");
+            alert(error instanceof Error ? error.message : "Something went wrong");
         }
     };
 
@@ -156,6 +164,8 @@ export default function CreateEventPage() {
                                             id="title"
                                             name="title"
                                             type="text"
+                                            value={form.title}
+                                            onChange={(e) => update("title", e.target.value)}
                                             placeholder="e.g. Winter Clothes Distribution – Mirpur 10, Dhaka"
                                             required
                                             className="h-11 rounded-xl border-slate-200 bg-slate-50 pl-10 text-sm shadow-sm focus-visible:border-[#0ead69] focus-visible:ring-[#0ead69]" />
@@ -202,6 +212,8 @@ export default function CreateEventPage() {
                                                 id="date"
                                                 name="date"
                                                 type="date"
+                                                value={form.date}
+                                                onChange={(e) => update("date", e.target.value)}
                                                 min={minDate}
                                                 required
                                                 className="h-11 rounded-xl border-slate-200 bg-slate-50 pl-10 text-sm shadow-sm text-slate-400 focus-visible:border-[#0ead69] focus-visible:ring-[#0ead69]" />
@@ -226,6 +238,8 @@ export default function CreateEventPage() {
                                             id="location"
                                             name="location"
                                             type="text"
+                                            value={form.location}
+                                            onChange={(e) => update("location", e.target.value)}
                                             placeholder="e.g. Mohammadpur Town Hall, Dhaka"
                                             required
                                             className="h-11 rounded-xl border-slate-200 bg-slate-50 pl-10 text-sm shadow-sm focus-visible:border-[#0ead69] focus-visible:ring-[#0ead69]" />
@@ -281,9 +295,12 @@ export default function CreateEventPage() {
                                     <Textarea
                                         id="description"
                                         name="description"
+                                        value={form.description}
+                                        onChange={(e) => update("description", e.target.value)}
                                         required
                                         placeholder="Explain the purpose of the drive, volunteers required, items being distributed or tasks to complete..."
-                                        className="min-h-[125px] resize-y rounded-xl border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-6 shadow-sm focus-visible:border-[#0ead69] focus-visible:ring-[#0ead69]" />
+                                        className="min-h-[125px] resize-y rounded-xl border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-6 shadow-sm focus-visible:border-[#0ead69] focus-visible:ring-[#0ead69]"
+                                    />
                                 </Field>
 
                                 <div className="flex flex-col gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 sm:flex-row sm:items-center sm:justify-between dark:bg-[#1B1E26]">

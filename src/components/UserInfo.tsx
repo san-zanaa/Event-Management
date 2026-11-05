@@ -60,14 +60,14 @@ const UserInfo = () => {
             className="text-[12px] text-gray-500 cursor-pointer">⮟</button>
 
           {isOpen && (
-            <div className="absolute right-0 top-12 z-50 w-80 rounded-3xl border border-gray-200 bg-white p-6 shadow-xl">
-              <h2 className="text-xl font-semibold text-gray-800">{user.name}</h2>
+            <div className="absolute right-0 top-12 z-50 w-80 rounded-3xl border border-gray-200 bg-white p-6 shadow-xl dark:bg-[#353841] dark:border-gray-500">
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">{user.name}</h2>
               <p className="mb-8 text-gray-500">{user.email}</p>
 
               <Link
                 href="/create-event"
                 onClick={() => setIsOpen(false)}
-                className="mb-3 block text-sm text-gray-700 flex gap-2">
+                className="mb-3 block text-sm text-gray-700 flex gap-2 dark:text-gray-300">
                 <CirclePlus size={16} className="text-[#0ead69]" />
                 Create Events
               </Link>
@@ -75,7 +75,7 @@ const UserInfo = () => {
               <Link
                 href="/manage-events"
                 onClick={() => setIsOpen(false)}
-                className="mb-3 block text-sm text-gray-700 flex gap-2">
+                className="mb-3 block text-sm text-gray-700 flex gap-2 dark:text-gray-300">
                 <Settings size={16} className="text-[#0ead69]" />
                 Manage Events
               </Link>
@@ -83,7 +83,7 @@ const UserInfo = () => {
               <Link
                 href="/joined-events"
                 onClick={() => setIsOpen(false)}
-                className="mb-6 block text-sm text-gray-800 flex gap-2">
+                className="mb-6 block text-sm text-gray-800 flex gap-2 dark:text-gray-300">
                 <CircleCheck size={16} className="text-[#0ead69]" />
                 Joined Events
               </Link>

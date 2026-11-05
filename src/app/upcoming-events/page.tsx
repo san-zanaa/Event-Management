@@ -7,19 +7,20 @@ import EventCard, { type Event } from "@/components/EventCards";
 
 export default function UpcomingEvents() {
     const [events, setEvents] = useState<Event[]>([]);
-    const fetchEvents = async () => {
-        try {
-            const res = await fetch("http://localhost:5000/events");
-            if (!res.ok) {
-                throw new Error("Failed to fetch events");
-            }
-            const data: Event[] = await res.json();
-            setEvents(data);
-        } catch (error) {
-            console.error("Error fetching events:", error);
-        }
-    };
+
     useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const res = await fetch("http://localhost:5000/events");
+                if (!res.ok) {
+                    throw new Error("Failed to fetch events");
+                }
+                const data: Event[] = await res.json();
+                setEvents(data);
+            } catch (error) {
+                console.error("Error fetching events:", error);
+            }
+        };
         fetchEvents();
     }, []);
 

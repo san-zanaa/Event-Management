@@ -7,19 +7,20 @@ import EventCard, { type Event } from "@/components/EventCards";
 
 export default function Upcoming() {
     const [events, setEvents] = useState<Event[]>([]);
-    const fetchEvents = async () => {
-        try {
-            const res = await fetch("http://localhost:5000/events");
-            if (!res.ok) {
-                throw new Error("Failed to fetch events");
-            }
-            const data: Event[] = await res.json();
-            setEvents(data);
-        } catch (error) {
-            console.error("Error fetching events:", error);
-        }
-    }
+
     useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const res = await fetch("http://localhost:5000/events");
+                if (!res.ok) {
+                    throw new Error("Failed to fetch events");
+                }
+                const data: Event[] = await res.json();
+                setEvents(data);
+            } catch (error) {
+                console.error("Error fetching events:", error);
+            }
+        };
         fetchEvents();
     }, []);
 
@@ -40,7 +41,7 @@ export default function Upcoming() {
                         </h2>
 
                         <p className="mt-3 text-sm text-slate-500 md:text-base">
-                            Empowering communities through action. Catch up on our volunteers' recent activities and find out where we need your support next!
+                            Empowering communities through action. Catch up on our volunteers&apos; recent activities and find out where we need your support next!
 
                         </p>
                     </div>
