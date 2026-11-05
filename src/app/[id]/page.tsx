@@ -83,7 +83,7 @@ export default function EventDetailsPage({ params }: PageProps) {
     useEffect(() => {
         async function fetchEvents() {
             try {
-                const response = await fetch("http://localhost:5000/events", {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events`, {
                     cache: "no-store",
                 });
 

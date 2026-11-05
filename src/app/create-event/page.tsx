@@ -15,19 +15,19 @@ import { useRouter } from "next/navigation";
 const photoPresets = [
     {
         name: "Winter Clothes",
-        url: "http://localhost:5000/uploads/winter-clothes.jpg",
+        url: `${process.env.NEXT_PUBLIC_API_URL}/uploads/winter-clothes.jpg`,
     },
     {
         name: "Blanket Relief",
-        url: "http://localhost:5000/uploads/blanket-relief.jpg",
+        url: `${process.env.NEXT_PUBLIC_API_URL}/uploads/blanket-relief.jpg`,
     },
     {
         name: "Cleanup",
-        url: "http://localhost:5000/uploads/cleanup.jpg",
+        url: `${process.env.NEXT_PUBLIC_API_URL}/uploads/cleanup.jpg`,
     },
     {
         name: "Tree Plantation",
-        url: "http://localhost:5000/uploads/tree-plantation.jpg",
+        url: `${process.env.NEXT_PUBLIC_API_URL}/uploads/tree-plantation.jpg`,
     },
 ];
 

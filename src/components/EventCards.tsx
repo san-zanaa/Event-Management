@@ -23,7 +23,7 @@ type EventCardProps = {
 export default function EventCard({ event }: EventCardProps) {
   const imageSrc = event.image.startsWith("http")
     ? event.image
-    : `http://localhost:5000${event.image.startsWith("/") ? "" : "/"}${event.image}`;
+    : `${process.env.NEXT_PUBLIC_API_URL}${event.image.startsWith("/") ? "" : "/"}${event.image}`;
 
   return (
     <Card className="group overflow-hidden rounded-2xl border border-[#e5eee2] bg-white dark:bg-[#222630] py-0 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-gray-600">

@@ -108,7 +108,7 @@ export default function JoinedEventsPage() {
             if (error || !data?.token) {
                 throw new Error("Please login first.");
             }
-            const response = await fetch(`http://localhost:5000/leave-event/${eventId}`,
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/leave-event/${eventId}`,
                 {
                     method: "DELETE",
                     headers: {

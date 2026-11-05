@@ -93,7 +93,7 @@ export default function ManageEventsPage() {
                 if (error || !tokenData?.token) {
                     throw new Error("Please login first.");
                 }
-                const response = await fetch("http://localhost:5000/my-events",
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events`,
                     {
                         headers: {
                             Authorization: `Bearer ${tokenData.token}`,
