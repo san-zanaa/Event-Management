@@ -327,12 +327,12 @@ export default function JoinedEventsPage() {
                         ))}
                     </div>
                 ) : (
-                    <div className="rounded-3xl border border-dashed border-gray-300 bg-white px-6 py-16 text-center">
+                    <div className="rounded-3xl border border-dashed border-gray-300 bg-white px-6 py-16 text-center dark:bg-[#222630] dark:border-gray-500">
                         <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50">
                             <CalendarCheck size={30} className="text-emerald-600" />
                         </div>
 
-                        <h3 className="text-xl font-bold text-gray-900">
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-gray-300">
                             No Joined Events Yet
                         </h3>
 

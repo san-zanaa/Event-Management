@@ -60,7 +60,7 @@ export default function Hero() {
                 <div className="mt-10 flex w-full flex-col items-center justify-center gap-4 sm:w-auto sm:flex-row">
 
                     <Link
-                        href="#events"
+                        href="upcoming-events"
                         className="group flex w-full items-center justify-center gap-3 rounded-full bg-[#0ead69] px-8 py-4 text-sm font-bold text-white shadow-[0_10px_35px_rgba(14,173,105,0.3)] transition duration-300 hover:-translate-y-1 hover:bg-[#0c995c] hover:shadow-[0_15px_40px_rgba(14,173,105,0.4)] sm:w-auto md:text-base">
                         Explore Events
                         <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />

@@ -1,120 +1,119 @@
 
 import Link from "next/link";
-import { CalendarDays, Sparkles, MapPin, Globe, Heart } from "lucide-react";
 import Image from "next/image";
+import { MapPin, Globe, Mail, MessageSquare, Users, Radio } from "lucide-react";
 
 export default function Footer() {
     return (
-        <footer>
-
-            <div className="mx-auto max-w-7xl px-5 pt-14 pb-8 md:px-8 border-t dark:bg-[#101116]">
-                <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
+        <footer className="border-t border-slate-200 bg-white dark:border-white/10 dark:bg-[#101116]">
+            <div className="mx-auto max-w-7xl px-5 pt-10 pb-6 md:px-8">
+                <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1.4fr_1.5fr] lg:gap-12">
                     <div>
-                        <div className='flex gap-1'>
-                            <Image src={'/images/Sociallogo.png'} alt='logo' height={40} width={40} className='w-7 h-9 object-contain' />
-                            <div className='flex flex-col items-center sm:items-start'>
-                                <h1 className='font-bold text-2xl'>Social<span className='text-[#0ead69]'>Circle</span></h1>
-                            </div>
-                        </div>
-                        <p className="max-w-xs text-sm leading-6 text-slate-500">
-                            A community-driven event management platform
-                            empowering everyday citizens to create, join
-                            and track impactful social development drives.
+                        <Link href="/" className="inline-flex items-center gap-2">
+                            <Image
+                                src="/images/Sociallogo.png"
+                                alt="Social Circle"
+                                width={40}
+                                height={40}
+                                className="h-9 w-9 object-contain"/>
+                            <span className="text-2xl font-bold text-slate-800 dark:text-white">
+                                Social<span className="text-[#0ead69]">Circle</span>
+                            </span>
+                        </Link>
+                        <p className="mt-3 max-w-xs text-sm leading-6 text-slate-500 dark:text-slate-400">
+                            Small Actions. Together, We Create Big Change.
                         </p>
-                        <div className="mt-5 flex items-center gap-1 text-xs text-slate-500">
-                            <MapPin size={18} className="text-[#0ead69]" />
-                            <span>Dhaka, Bangladesh - Nationwide Impact</span>
+                        <div className="mt-4 flex items-center gap-2">
+                            {[
+                                { icon: Globe, href: "#" },
+                                { icon: MessageSquare, href: "#" },
+                                { icon: Users, href: "#" },
+                                { icon: Radio, href: "#" },
+                            ].map((social, index) => {
+                                const Icon = social.icon;
+                                return (
+                                    <Link
+                                        key={index}
+                                        href={social.href}
+                                        className="flex h-8 w-8 items-center justify-center rounded-full bg-[#E8F5EE] text-[#0ead69] transition-all duration-300 hover:bg-[#0ead69] hover:text-white dark:bg-[#0ead69]/10"
+                                    >
+                                        <Icon size={15} />
+                                    </Link>
+                                );
+                            })}
                         </div>
                     </div>
-
                     <div>
-                        <h3 className="mb-5 text-sm font-bold uppercase tracking-wide text-slate-800">
-                            Explore Platform
+                        <h3 className="mb-4 text-sm font-bold text-slate-800 dark:text-white">
+                            Quick Links
                         </h3>
-                        <ul className="space-y-3">
-                            <li>
-                                <Link href="/upcoming-events" className="inline-flex items-center gap-2 text-sm hover:text-[#0ead69] transition-colors">
-                                    <CalendarDays size={15} className="text-[#0ead69]" />
-                                    Upcoming Events
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/create-event" className="inline-flex items-center gap-2 text-sm hover:text-[#0ead69] transition-colors">
-                                    <Sparkles size={15} className="text-[#0ead69]" />
-                                    Create an Event
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/my-events" className="text-sm hover:text-[#0ead69] transition-colors">
-                                    Manage My Events
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/joined-events" className="text-sm hover:text-[#0ead69] transition-colors">
-                                    My Joined Events
-                                </Link>
-                            </li>
+                        <ul className="space-y-2.5">
+                            <li><Link href="/" className="text-sm text-slate-500 transition-colors hover:text-[#0ead69] dark:text-slate-400">Home</Link></li>
+                            <li><Link href="/upcoming-events" className="text-sm text-slate-500 transition-colors hover:text-[#0ead69] dark:text-slate-400">Upcoming Events</Link></li>
+                            <li><Link href="/#how-it-works" className="text-sm text-slate-500 transition-colors hover:text-[#0ead69] dark:text-slate-400">How It Works</Link></li>
+                            <li><Link href="/#impact-stories" className="text-sm text-slate-500 transition-colors hover:text-[#0ead69] dark:text-slate-400">Impact Stories</Link></li>
+                            <li><Link href="/#about" className="text-sm text-slate-500 transition-colors hover:text-[#0ead69] dark:text-slate-400">About Us</Link></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 className="mb-4 text-sm font-bold text-slate-800 dark:text-white">
+                            Categories
+                        </h3>
+                        <ul className="space-y-2.5">
+                            {[
+                                "Tree Plantation",
+                                "Winter Drive",
+                                "Food Distribution",
+                                "Blood Donation",
+                                "Cleanups",
+                                "Community Awareness",
+                            ].map((category) => (
+                                <li key={category}>
+                                    <Link
+                                        href="/upcoming-events"
+                                        className="text-sm text-slate-500 transition-colors hover:text-[#0ead69] dark:text-slate-400">
+                                        {category}
+                                    </Link>
+                                </li>
+                            ))}
                         </ul>
                     </div>
 
                     <div>
-                        <h3 className="mb-5 text-sm font-bold uppercase tracking-wide text-slate-800">
-                            Active Causes
+                        <h3 className="mb-4 text-sm font-bold text-slate-800 dark:text-white">
+                            Get Involved
                         </h3>
-                        <ul className="space-y-3">
-                            <li className="flex items-start gap-2 text-sm">
-                                <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#0ead69] shrink-0" />
-                                Winter Clothes & Blanket Relief
-                            </li>
-                            <li className="flex items-start gap-2 text-sm">
-                                <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#0ead69] shrink-0" />
-                                City Clean-up & Waste Segregation
-                            </li>
-                            <li className="flex items-start gap-2 text-sm">
-                                <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#0ead69] shrink-0" />
-                                Urban Tree Plantation Drives
-                            </li>
-                            <li className="flex items-start gap-2 text-sm">
-                                <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#0ead69] shrink-0" />
-                                Underprivileged Meal Sharing
-                            </li>
-                            <li className="flex items-start gap-2 text-sm">
-                                <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#0ead69] shrink-0" />
-                                Free Medical & Health Camps
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h3 className="mb-5 text-sm font-bold uppercase tracking-wide text-slate-800">
-                            Community Spirit
-                        </h3>
-                        <p className="text-sm leading-6 text-slate-500">
-                            Every small action counts. Connect with local
-                            volunteers, turn compassion into direct community
-                            aid, and be the change your city needs.
+                        <p className="mb-3 text-sm text-slate-500 dark:text-slate-400">
+                            Be Part of Something Good
                         </p>
-                        <div className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[#E8F5F1] px-3 py-2 text-xs font-semibold text-[#0ead69]">
-                            <Globe size={14} />
-                            100% Volunteer Driven
-                        </div>
+                        <a
+                            href="mailto:support@socialcircle.org"
+                            className="mb-3 flex items-center gap-2 text-sm text-slate-500 transition-colors hover:text-[#0ead69] dark:text-slate-400">
+                            <Mail size={15} className="text-[#0ead69]" />
+                            support@socialcircle.org
+                        </a>
+                        <p className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+                            <MapPin size={15} className="text-[#0ead69]" />
+                            Dhaka, Bangladesh
+                        </p>
                     </div>
                 </div>
 
-                <div className="my-9 border-t border-slate-200" />
-                <div className="flex flex-col items-center justify-between gap-4 text-center text-xs text-slate-500 md:flex-row md:text-left">
+                <div className="my-8 border-t border-slate-200 dark:border-white/10" />
+                <div className="flex flex-col items-center justify-between gap-4 text-center text-xs text-slate-500 md:flex-row md:text-left dark:text-slate-400">
                     <p>
-                        © SocialCircle.
-                        Built with care for community service and social development.
+                        © 2026 Social Circle Platform. All rights reserved.
                     </p>
-                    <p className="inline-flex items-center gap-1.5">
-                        Made with
-                        <Heart size={14} className="fill-[#0ead69] text-[#0ead69] " />
-                        for a better tomorrow
-                    </p>
+                    <div className="flex items-center gap-5">
+                        <a href="#" className="transition-colors hover:text-[#0ead69]">
+                            Privacy Policy
+                        </a>
+                        <a href="#" className="transition-colors hover:text-[#0ead69]">
+                            Terms of Service
+                        </a>
+                    </div>
                 </div>
             </div>
-
         </footer>
     );
 }

@@ -27,7 +27,7 @@ export default function Upcoming() {
         <section className="w-full bg-slate-50 dark:bg-[#15171D] py-16 md:py-20">
             <div className="mx-auto max-w-7xl px-5 md:px-8">
                 <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
-                    <div>
+                    <div className="w-2/3">
                         <div className="mb-3 flex items-center gap-2">
                             <Flame className="h-4 w-4 fill-orange-400 text-orange-500" />
                             <span className="text-xs font-bold uppercase tracking-widest text-[#0ead69]">
@@ -35,20 +35,19 @@ export default function Upcoming() {
                             </span>
                         </div>
 
-                        <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
+                        <h2 className="text-2xl font-extrabold tracking-tight text-slate-900 md:text-3xl dark:text-gray-300">
                             Recent Upcoming Events
                         </h2>
 
                         <p className="mt-3 text-sm text-slate-500 md:text-base">
-                            Latest 6 community drives scheduled in your city.
-                            Get involved today.
+                            Empowering communities through action. Catch up on our volunteers' recent activities and find out where we need your support next!
+
                         </p>
                     </div>
 
                     <Link
                         href="/events"
-                        className="group flex items-center gap-2 text-sm font-semibold text-[#0ead69] transition hover:text-[#07c573]"
-                    >
+                        className="group flex items-center gap-2 text-sm font-semibold text-[#0ead69] transition hover:text-[#07c573]">
                         View All Events
                         <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </Link>

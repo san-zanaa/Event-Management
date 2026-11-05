@@ -55,16 +55,16 @@ export default function CommunityGallery() {
                             Visual Stories
                         </p>
 
-                        <h2 className="text-3xl font-extrabold text-slate-900 md:text-4xl">
+                        <h2 className="text-2xl font-extrabold text-slate-900 md:text-3xl dark:text-gray-300">
                             Community in Action
                         </h2>
 
-                        <p className="mt-3 max-w-xl text-sm leading-6 text-slate-600 md:text-base">
+                        <p className="mt-3 max-w-xl text-sm leading-6 text-slate-500 md:text-base">
                             Visual dispatches from our community drives across Dhaka and surrounding neighborhoods.
                         </p>
                     </div>
 
-                    <span className="text-xs font-medium text-slate-600">
+                    <span className="text-xs font-medium text-slate-400">
                         Updated weekly by field volunteers
                     </span>
                 </div>
