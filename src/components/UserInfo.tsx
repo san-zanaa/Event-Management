@@ -1,5 +1,6 @@
 "use client"
 import { useState } from "react";
+import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -17,17 +18,17 @@ const UserInfo = () => {
       const { error } = await authClient.signOut();
 
       if (error) {
-        alert(error.message || "Logout failed!");
+        toast.error(error.message || "Logout failed!");
         return;
       }
       setIsOpen(false);
-      alert("Signed out successfully!");
+      toast.success("Signed out successfully!");
       router.push("/");
       router.refresh();
 
     } catch (error) {
       console.error("Logout error:", error);
-      alert("Something went wrong!");
+      toast.error("Something went wrong!");
     }
   };
 

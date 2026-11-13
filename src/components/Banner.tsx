@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
     ArrowRight,
+    ArrowUpRight,
     Heart,
     Users,
     CalendarDays,
@@ -10,144 +11,165 @@ import {
     Sparkles,
     MoveDown,
 } from "lucide-react";
+import Reveal from "./Reveal";
+import StatCounter from "./StatCounter";
+
+const stats = [
+    { icon: Users, value: 1450, suffix: "+", label: "Active Volunteers" },
+    { icon: CalendarDays, value: 180, suffix: "+", label: "Events Completed" },
+    { icon: HandHeart, value: 24000, suffix: "+", label: "Lives Impacted" },
+    { icon: Heart, value: 100, suffix: "%", label: "Community Driven" },
+];
 
 export default function Hero() {
     return (
-        <section className="relative isolate flex min-h-[850px] flex-col overflow-hidden bg-[#10251b] md:min-h-[900px]">
+        <section className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-[#071b12] lg:min-h-[900px]">
 
-            <div className="absolute inset-0 -z-20">
+            <div className="absolute inset-0 -z-30">
                 <Image
                     src="/images/banner.png"
                     alt="Social Circle community volunteers"
                     fill
                     priority
                     sizes="100vw"
-                    className="object-cover object-center"
-                />
+                    className="object-cover object-[65%_center] sm:object-[60%_center] md:object-center"/>
             </div>
 
-            <div className="absolute inset-0 -z-10 bg-[#071b12]/55" />
-            <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[#071b12]/40 via-[#071b12]/20 to-[#071b12]/90" />
-            <div className="absolute -left-40 top-20 -z-10 h-96 w-96 rounded-full bg-[#0ead69]/20 blur-[120px]" />
-            <div className="absolute -right-40 bottom-20 -z-10 h-96 w-96 rounded-full bg-emerald-400/10 blur-[120px]" />
-            <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col items-center justify-center px-5 pb-20 pt-32 text-center md:pt-36">
-                <div className="mb-8 inline-flex items-center gap-2.5 rounded-full border border-white/25 bg-white/10 px-5 py-2.5 shadow-lg backdrop-blur-xl">
-                    <span className="relative flex h-2.5 w-2.5">
-                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#0ead69] opacity-75" />
-                        <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#0ead69]" />
-                    </span>
-                    <span className="text-xs font-semibold tracking-wide text-white md:text-sm">
-                        YOUR COMMUNITY, YOUR CIRCLE
-                    </span>
+            <div className="absolute inset-0 bg-[#06170f]/30" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#06170f]/45 via-[#06170f]/45 to-[#06170f]/75 md:bg-gradient-to-r md:from-[#06170f]/75 md:via-[#06170f]/45 md:to-[#06170f]/10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#06170f]/50 via-transparent to-transparent" />
+            <div className="absolute -left-40 top-20 -z-10 h-[450px] w-[450px] rounded-full bg-[#0ead69]/20 blur-[140px]" />
+            <div className="absolute -right-40 top-1/4 -z-10 h-[400px] w-[400px] rounded-full bg-emerald-400/10 blur-[140px]" />
+            <div className="absolute inset-0 -z-10 opacity-[0.05] [background-image:radial-gradient(#ffffff_1px,transparent_1px)] [background-size:35px_35px]" />
+            <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 items-center px-5 pb-12 pt-28 sm:px-8 sm:pb-16 sm:pt-32 md:py-24 lg:px-12">
 
-                    <Sparkles className="h-4 w-4 text-lime-300" />
-                </div>
+                <div className="w-full max-w-3xl text-left">
 
-                <h1 className="max-w-5xl text-5xl font-extrabold leading-[1.12] tracking-tight text-white sm:text-6xl md:text-7xl lg:text-[82px]">
-                    Together We Can
-                    <br />
-                    <span className="bg-gradient-to-r from-[#8df5b9] via-[#4be69a] to-[#b5f77c] bg-clip-text text-transparent">
-                        Make a Difference.
-                    </span>
-                </h1>
-
-                <p className="mt-7 max-w-2xl text-base leading-8 text-white/80 sm:text-lg md:text-xl">
-                    Small acts of kindness create extraordinary change.
-                    Discover meaningful community events, meet passionate
-                    people, and be part of something bigger.
-                </p>
-
-                <div className="mt-10 flex w-full flex-col items-center justify-center gap-4 sm:w-auto sm:flex-row">
-
-                    <Link
-                        href="upcoming-events"
-                        className="group flex w-full items-center justify-center gap-3 rounded-full bg-[#0ead69] px-8 py-4 text-sm font-bold text-white shadow-[0_10px_35px_rgba(14,173,105,0.3)] transition duration-300 hover:-translate-y-1 hover:bg-[#0c995c] hover:shadow-[0_15px_40px_rgba(14,173,105,0.4)] sm:w-auto md:text-base">
-                        Explore Events
-                        <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-                    </Link>
-
-                    <Link
-                        href="/create-event"
-                        className="group flex w-full items-center justify-center gap-3 rounded-full border border-white/40 bg-white/10 px-8 py-4 text-sm font-semibold text-white shadow-lg backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white hover:bg-white hover:text-[#123d29] sm:w-auto md:text-base">
-                        <Heart className="h-5 w-5 transition-transform group-hover:scale-110" />
-                        Create an Event
-                    </Link>
-
-                </div>
-
-                <div className="mt-12 flex items-center gap-3 text-sm text-white/70">
-                    <div className="flex -space-x-3">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white/60 bg-[#d7f5df] text-[#14784a]">
-                            <Users size={16} />
+                    <Reveal variant="down" duration={800}>
+                        <div className="mb-6 inline-flex max-w-full items-center gap-2 rounded-full border border-white/20 bg-white/[0.08] px-3.5 py-2 shadow-lg backdrop-blur-xl sm:mb-9 sm:gap-3 sm:px-5 sm:py-2.5">
+                            <span className="relative flex h-2.5 w-2.5 shrink-0">
+                                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#0ead69] opacity-75" />
+                                <span className="relative h-2.5 w-2.5 rounded-full bg-[#48e99b]" />
+                            </span>
+                            <span className="text-[9px] font-bold uppercase tracking-[0.12em] text-white/90 sm:text-[11px] sm:tracking-[0.18em] md:text-xs">
+                                Your Community, Your Circle
+                            </span>
+                            <Sparkles className="h-3.5 w-3.5 shrink-0 text-lime-300 sm:h-4 sm:w-4" />
                         </div>
-                        <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white/60 bg-[#c9e9d4] text-[#14784a]">
-                            <Heart size={16} />
+                    </Reveal>
+
+                    <Reveal variant="up" delay={100} duration={850}>
+                        <h1 className="text-[clamp(2.5rem,8vw,4rem)] font-extrabold leading-[1.08] tracking-[-0.045em] text-white lg:text-[60px]">
+                            Together We Can
+                            <span className="mt-1 block bg-gradient-to-r from-[#b2ffd0] via-[#4be69a] to-[#c8ff92] bg-clip-text text-transparent">
+                                Make a Difference.
+                            </span>
+                        </h1>
+                    </Reveal>
+
+                    <Reveal variant="up" delay={220} duration={850}>
+                        <p className="mt-5 max-w-xl text-sm leading-7 text-white/80 sm:mt-8 sm:text-base sm:leading-8 md:text-lg">
+                            Small acts of kindness create extraordinary change.
+                            Discover meaningful community events, connect with
+                            passionate people, and become part of something bigger.
+                        </p>
+                    </Reveal>
+
+                    <Reveal
+                        variant="up"
+                        delay={350}
+                        duration={850}
+                        className="mt-7 flex w-full flex-col gap-3 sm:mt-10 sm:w-fit sm:flex-row sm:gap-4">
+                        <Link
+                            href="/upcoming-events"
+                            className="group flex w-full items-center justify-center gap-3 rounded-full bg-[#0ead69] px-7 py-4 text-sm font-bold text-white shadow-[0_12px_40px_rgba(14,173,105,0.3)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#10c477] hover:shadow-[0_16px_45px_rgba(14,173,105,0.4)] sm:w-fit sm:px-8 sm:py-[17px] sm:text-base">
+                            Explore Events
+                            <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                        </Link>
+
+                        <Link
+                            href="/create-event"
+                            className="group flex w-full items-center justify-center gap-3 rounded-full border border-white/30 bg-white/[0.08] px-7 py-4 text-sm font-semibold text-white backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-white hover:bg-white hover:text-[#123d29] sm:w-fit sm:px-8 sm:py-[17px] sm:text-base">
+                            <Heart className="h-5 w-5 transition-transform duration-300 group-hover:scale-110 group-hover:fill-current" />
+                            Create an Event
+                            <ArrowUpRight className="h-4 w-4 opacity-60 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                        </Link>
+                    </Reveal>
+
+                    <Reveal variant="up" delay={480} duration={850}>
+                        <div className="mt-8 flex flex-wrap items-center gap-3 sm:mt-12 sm:gap-4">
+                            <div className="flex -space-x-3 shrink-0">
+                                <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#234332] bg-[#d7f5df] text-[#14784a] sm:h-10 sm:w-10">
+                                    <Users size={17} />
+                                </div>
+                                <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#234332] bg-[#c9e9d4] text-[#14784a] sm:h-10 sm:w-10">
+                                    <Heart size={17} />
+                                </div>
+                                <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#234332] bg-[#b4e3c5] text-[#14784a] sm:h-10 sm:w-10">
+                                    <HandHeart size={17} />
+                                </div>
+                            </div>
+
+                            <div>
+                                <p className="text-xs font-semibold text-white sm:text-sm">
+                                    Together, We Make an Impact
+                                </p>
+                                <p className="mt-1 text-[10px] text-white/60 sm:text-xs">
+                                    Bringing communities together, one event at a time.
+                                </p>
+                            </div>
                         </div>
-                        <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white/60 bg-[#b4e3c5] text-[#14784a]">
-                            <HandHeart size={16} />
-                        </div>
-                    </div>
-
-                    <p>
-                        Bringing communities together, one event at a time.
-                    </p>
-                </div>
-            </div>
-
-            <div className="relative z-10 mx-auto mb-10 w-full max-w-5xl px-5 md:mb-12">
-
-                <div className="grid grid-cols-2 gap-3 rounded-[28px] border border-white/20 bg-white/10 p-4 shadow-2xl backdrop-blur-2xl sm:grid-cols-4 sm:gap-0 sm:p-6">
-
-                    <div className="flex flex-col items-center justify-center border-white/15 py-4 sm:border-r">
-                        <Users className="mb-3 h-6 w-6 text-[#70e9a6]" />
-                        <h3 className="text-3xl font-extrabold text-white md:text-4xl">
-                            1,450+
-                        </h3>
-                        <p className="mt-2 text-xs font-medium text-white/65 md:text-sm">
-                            Active Volunteers
-                        </p>
-                    </div>
-
-                    <div className="flex flex-col items-center justify-center border-white/15 py-4 sm:border-r">
-                        <CalendarDays className="mb-3 h-6 w-6 text-[#70e9a6]" />
-                        <h3 className="text-3xl font-extrabold text-white md:text-4xl">
-                            180+
-                        </h3>
-                        <p className="mt-2 text-xs font-medium text-white/65 md:text-sm">
-                            Events Completed
-                        </p>
-                    </div>
-
-                    <div className="flex flex-col items-center justify-center border-white/15 py-4 sm:border-r">
-                        <HandHeart className="mb-3 h-6 w-6 text-[#70e9a6]" />
-                        <h3 className="text-3xl font-extrabold text-white md:text-4xl">
-                            24,000+
-                        </h3>
-                        <p className="mt-2 text-xs font-medium text-white/65 md:text-sm">
-                            Lives Impacted
-                        </p>
-                    </div>
-
-                    <div className="flex flex-col items-center justify-center py-4">
-                        <Heart className="mb-3 h-6 w-6 text-[#70e9a6]" />
-                        <h3 className="text-3xl font-extrabold text-white md:text-4xl">
-                            100%
-                        </h3>
-                        <p className="mt-2 text-xs font-medium text-white/65 md:text-sm">
-                            Community Driven
-                        </p>
-                    </div>
-
+                    </Reveal>
                 </div>
             </div>
 
-            <div className="absolute bottom-3 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-1 text-white/60 md:flex">
-                <span className="text-[10px] font-semibold uppercase tracking-[0.2em]">
-                    Discover More
+            <div className="relative z-10 mx-auto mb-6 w-full max-w-7xl px-4 sm:mb-10 sm:px-8 lg:px-12 md:mb-14">
+                <Reveal variant="up" delay={200} duration={900}>
+                    <div className="overflow-hidden rounded-2xl border border-white/[0.18] bg-white/[0.09] p-3 shadow-[0_25px_80px_rgba(0,0,0,0.25)] backdrop-blur-2xl sm:rounded-[28px] sm:p-7">
+
+                        <div className="grid grid-cols-2 gap-y-3 sm:grid-cols-4 sm:gap-0">
+                            {stats.map((stat, index) => {
+                                const Icon = stat.icon;
+
+                                return (
+                                    <div
+                                        key={stat.label}
+                                        className={`group flex flex-col items-center justify-center px-2 py-3 text-center sm:px-3 sm:py-3 ${
+                                            index % 2 === 0 ? "max-sm:border-r max-sm:border-white/15" : ""
+                                        } ${
+                                            index < 2 ? "max-sm:border-b max-sm:border-white/15" : ""
+                                        } ${
+                                            index < 3 ? "sm:border-r sm:border-white/15" : ""
+                                        }`}>
+                                        <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-xl border border-[#70e9a6]/20 bg-[#0ead69]/15 transition-all duration-300 group-hover:scale-110 group-hover:bg-[#0ead69]/25 sm:mb-3 sm:h-11 sm:w-11">
+                                            <Icon className="h-4 w-4 text-[#70e9a6] sm:h-5 sm:w-5" />
+                                        </div>
+
+                                        <h3 className="text-2xl font-extrabold tracking-tight text-white sm:text-3xl md:text-4xl">
+                                            <StatCounter
+                                                value={stat.value}
+                                                suffix={stat.suffix}
+                                                duration={1600 + index * 200}
+                                            />
+                                        </h3>
+
+                                        <p className="mt-1 text-[10px] font-semibold text-white/60 sm:mt-2 sm:text-xs md:text-sm">
+                                            {stat.label}
+                                        </p>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </Reveal>
+            </div>
+
+            <div className="absolute bottom-4 right-8 hidden items-center gap-2 text-white/50 md:flex">
+                <span className="text-[9px] font-bold uppercase tracking-[0.25em]">
+                    Scroll to Explore
                 </span>
                 <MoveDown className="h-4 w-4 animate-bounce" />
             </div>
-
         </section>
     );
 }

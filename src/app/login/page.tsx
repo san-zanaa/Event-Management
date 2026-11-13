@@ -7,11 +7,14 @@ import { Input } from "@/components/ui/input";
 import { ArrowRight, Mail, Lock, EyeOff, Eye } from "lucide-react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
-import { startTransition, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { startTransition, Suspense, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectPath = searchParams.get("redirect") || "/"
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -35,7 +38,7 @@ export default function LoginPage() {
     e.preventDefault();
 
     if (!email || !password) {
-      alert("Please enter your email and password!");
+      toast.warning("Please enter your email and password!");
       return;
     }
     setLoading(true);
@@ -46,19 +49,19 @@ export default function LoginPage() {
         password,
       });
       if (error) {
-        alert(error.message || "Login failed!");
+        toast.error(error.message || "Login failed!");
         return;
       }
       sessionStorage.removeItem("signupEmail");
       sessionStorage.removeItem("signupPassword");
 
-      alert("Login successful!");
+      toast.success("Login successful!");
 
-      router.push("/");
+      router.push(redirectPath);
       router.refresh();
     } catch (error) {
       console.error("Login error:", error);
-      alert("Something went wrong. Please try again!");
+      toast.error("Something went wrong. Please try again!");
     } finally {
       setLoading(false);
     }
@@ -74,8 +77,8 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-gray-50 p-6 md:p-12 dark:bg-[#15171D]">
       <div className="w-full max-w-sm p-2">
-        <div className={cn("flex flex-col gap-6 ")}>
-          <Card>
+        <div className={cn("flex flex-col gap-6")}>
+          <Card className="dark:bg-[#1B1E26]">
             <CardHeader>
               <CardTitle>Login to your account</CardTitle>
               <CardDescription>
@@ -182,5 +185,19 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen w-full items-center justify-center bg-gray-50 dark:bg-[#15171D]">
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-200 border-t-emerald-600" />
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }

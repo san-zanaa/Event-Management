@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "react-toastify";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -28,7 +29,7 @@ export default function SignupPage({ className }: React.ComponentProps<"div">) {
     const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!hasUppercase || !hasLowercase || !hasMinLength) {
-            alert("Please fulfill all password requirements!");
+            toast.warning("Please fulfill all password requirements!");
             return;
         }
         setLoading(true);
@@ -41,18 +42,18 @@ export default function SignupPage({ className }: React.ComponentProps<"div">) {
                 image: photo || undefined,
             });
             if (error) {
-                alert(error.message || "Signup failed!");
+                toast.error(error.message || "Signup failed!");
                 return;
             }
             sessionStorage.setItem("signupEmail", email);
             sessionStorage.setItem("signupPassword", password);
 
-            alert("Account created successfully!");
+            toast.success("Account created successfully!");
             router.push("/login");
 
         } catch (error) {
             console.error("Signup error:", error);
-            alert("Something went wrong!");
+            toast.error("Something went wrong!");
         } finally {
             setLoading(false);
         }
@@ -105,8 +106,7 @@ export default function SignupPage({ className }: React.ComponentProps<"div">) {
                                                 value={name}
                                                 onChange={(e) => setName(e.target.value)}
                                                 required
-                                                className="pl-9 h-10 bg-gray-50 border-gray-200 text-xs focus-visible:ring-[#0ead69]"
-                                            />
+                                                className="pl-9 h-10 bg-gray-50 border-gray-200 text-xs focus-visible:ring-[#0ead69]"/>
                                         </div>
                                     </Field>
                                     <Field className="gap-1">
@@ -123,8 +123,7 @@ export default function SignupPage({ className }: React.ComponentProps<"div">) {
                                                 value={email}
                                                 onChange={(e) => setEmail(e.target.value)}
                                                 required
-                                                className="pl-9 h-10 bg-gray-50 border-gray-200 text-xs focus-visible:ring-[#0ead69]"
-                                            />
+                                                className="pl-9 h-10 bg-gray-50 border-gray-200 text-xs focus-visible:ring-[#0ead69]"/>
                                         </div>
                                     </Field>
 
@@ -139,8 +138,7 @@ export default function SignupPage({ className }: React.ComponentProps<"div">) {
                                                 placeholder="https://images.unsplash.com/..."
                                                 value={photo}
                                                 onChange={(e) => setPhoto(e.target.value)}
-                                                className="h-10 bg-gray-50 border-gray-200 text-xs focus-visible:ring-[#0ead91]"
-                                            />
+                                                className="h-10 bg-gray-50 border-gray-200 text-xs focus-visible:ring-[#0ead91]"/>
                                         </div>
                                         <FieldDescription className="text-[10px] text-gray-400">
                                             Optional: Leave empty for default avatar

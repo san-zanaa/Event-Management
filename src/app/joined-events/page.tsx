@@ -4,6 +4,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import {
     CalendarDays,
     Clock,
@@ -18,6 +19,19 @@ import {
     LogOut,
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+import { API_URL, resolveImageSrc } from "@/lib/api";
+import Reveal from "@/components/Reveal";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 
 interface JoinedEvent {
@@ -59,7 +73,7 @@ export default function JoinedEventsPage() {
                 if (error || !data?.token) {
                     throw new Error("Please login first.");
                 }
-                const response = await fetch("http://localhost:5000/joined-events",
+                const response = await fetch(`${API_URL}/joined-events`,
                     {
                         method: "GET",
                         headers: {
@@ -127,10 +141,12 @@ export default function JoinedEventsPage() {
                 previousEvents.filter((event) => event._id !== eventId)
             );
 
+            toast.success("You have left this event.");
+
         } catch (err) {
             console.error(err);
 
-            alert(
+            toast.error(
                 err instanceof Error
                     ? err.message
                     : "Something went wrong."
@@ -228,24 +244,25 @@ export default function JoinedEventsPage() {
             <section className="mx-auto max-w-7xl px-5 pt-10 md:px-8 md:pt-14">
 
                 <div className="mb-12">
-                    <div className="flex max-w-sm items-center justify-between rounded-2xl border border-gray-100 bg-white p-6 shadow-sm dark:bg-[#1B1E26]">
-                        <div>
-                            <p className="text-sm font-medium text-gray-400">
-                                Total Joined Events
-                            </p>
+                    <Reveal variant="up">
+                        <div className="flex max-w-sm items-center justify-between rounded-2xl border border-gray-100 bg-white p-6 shadow-sm dark:bg-[#1B1E26]">
+                            <div>
+                                <p className="text-sm font-medium text-gray-400">
+                                    Total Joined Events
+                                </p>
 
-                            <h3 className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">
-                                {events.length}
-                            </h3>
-                        </div>
+                                <h3 className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">
+                                    {events.length}
+                                </h3>
+                            </div>
 
-                        <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-emerald-50">
-                            <CalendarCheck
-                                className="text-emerald-600"
-                                size={27}
-                            />
+                            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-emerald-50">
+                                <CalendarCheck
+                                    className="text-emerald-600"
+                                    size={27}/>
+                            </div>
                         </div>
-                    </div>
+                    </Reveal>
                 </div>
 
                 <div className="mb-8">
@@ -272,14 +289,17 @@ export default function JoinedEventsPage() {
 
                 {events.length > 0 ? (
                     <div className="grid grid-cols-1 gap-6 dark:bg-[#1B1E26]">
-                        {events.map((event) => (
-                            <div
+                        {events.map((event, index) => (
+                            <Reveal
                                 key={event._id}
-                                className="flex flex-col sm:flex-row gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm hover:shadow-md transition dark:bg-[#222630]">
+                                variant="up"
+                                delay={Math.min(index * 90, 360)}
+                                duration={650}>
+                                <div className="flex flex-col gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm transition-shadow hover:shadow-md hover:border-emerald-100 dark:border-gray-600 dark:bg-[#222630] dark:hover:border-emerald-900/50 sm:flex-row">
                                 <div className="relative h-52 w-full sm:h-44 sm:w-48 shrink-0 overflow-hidden rounded-xl">
-                                    {event.image && (
+                                    {event.image && resolveImageSrc(event.image) && (
                                         <Image
-                                            src={event.image}
+                                            src={resolveImageSrc(event.image) as string}
                                             alt={event.title}
                                             fill
                                             unoptimized
@@ -330,18 +350,48 @@ export default function JoinedEventsPage() {
                                         </p>
 
                                         <div className="flex flex-wrap items-center gap-2">
-                                            <button
-                                                type="button"
-                                                onClick={() => handleLeaveEvent(event._id)}
-                                                disabled={leavingId === event._id}
-                                                className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-700 px-5 py-2.5 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-60">
-                                                {leavingId === event._id ? (
-                                                    <Loader2 size={16} className="animate-spin" />
-                                                ) : (
-                                                    <LogOut size={16} />
-                                                )}
-                                                Leave
-                                            </button>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger
+                                                    render={
+                                                        <button
+                                                            type="button"
+                                                            disabled={leavingId === event._id}
+                                                            className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-700 px-5 py-2.5 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer" />
+                                                    }>
+                                                    {leavingId === event._id ? (
+                                                        <Loader2 size={16} className="animate-spin" />
+                                                    ) : (
+                                                        <LogOut size={16} />
+                                                    )}
+                                                    Leave
+                                                </AlertDialogTrigger>
+
+                                                <AlertDialogContent className="dark:bg-[#1B1E26]">
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>
+                                                            Leave this event?
+                                                        </AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                            You will no longer be listed as a
+                                                            volunteer for
+                                                            &quot;{event.title}&quot;. You can join
+                                                            again anytime.
+                                                        </AlertDialogDescription>
+                                                    </AlertDialogHeader>
+
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel className="cursor-pointer">
+                                                            Cancel
+                                                        </AlertDialogCancel>
+                                                        <AlertDialogAction
+                                                            onClick={() => handleLeaveEvent(event._id)}
+                                                            className="bg-emerald-700 text-white hover:bg-emerald-800 focus-visible:border-emerald-700/40 focus-visible:ring-emerald-700/20 dark:bg-emerald-700 dark:text-white dark:hover:bg-emerald-800 cursor-pointer">
+                                                            <LogOut size={16} />
+                                                            Leave Event
+                                                        </AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
 
                                             <Link
                                                 href={`/${event._id}`}
@@ -352,7 +402,8 @@ export default function JoinedEventsPage() {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                                </div>
+                            </Reveal>
                         ))}
                     </div>
                 ) : (

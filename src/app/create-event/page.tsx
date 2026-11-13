@@ -1,33 +1,35 @@
 "use client";
 
-import { startTransition, useEffect, useState } from "react";
+import { useState } from "react";
+import { toast } from "react-toastify";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, CalendarDays, MapPin, Image as ImageIcon, Tag, Type, Sparkles, PlusCircle } from "lucide-react";
+import { ArrowLeft, CalendarDays, MapPin, Image as ImageIcon, Tag, Type, Sparkles, PlusCircle, Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+import { API_URL, useClientToday } from "@/lib/api";
 import { useRouter } from "next/navigation";
 
 
 const photoPresets = [
     {
         name: "Winter Clothes",
-        url: `${process.env.NEXT_PUBLIC_API_URL}/uploads/winter-clothes.jpg`,
+        url: `${process.env.NEXT_PUBLIC_API_URL}/uploads/event2.jpg`,
     },
     {
         name: "Blanket Relief",
-        url: `${process.env.NEXT_PUBLIC_API_URL}/uploads/blanket-relief.jpg`,
+        url: `${process.env.NEXT_PUBLIC_API_URL}/uploads/event3.jpg`,
     },
     {
         name: "Cleanup",
-        url: `${process.env.NEXT_PUBLIC_API_URL}/uploads/cleanup.jpg`,
+        url: `${process.env.NEXT_PUBLIC_API_URL}/uploads/event4.jpg`,
     },
     {
         name: "Tree Plantation",
-        url: `${process.env.NEXT_PUBLIC_API_URL}/uploads/tree-plantation.jpg`,
+        url: `${process.env.NEXT_PUBLIC_API_URL}/uploads/event5.jpg`,
     },
 ];
 
@@ -59,42 +61,30 @@ export default function CreateEventPage() {
     const [eventType, setEventType] = useState("Donation");
 
     const [form, setForm] = useState(initialForm);
+    const [submitting, setSubmitting] = useState(false);
     const update = (field: keyof typeof form, value: string) =>
         setForm((current) => ({ ...current, [field]: value }))
 
-    const [minDate, setMinDate] = useState("");
-    useEffect(() => {
-        startTransition(() => {
-            const today = new Date();
-            setMinDate([
-                today.getFullYear(),
-                String(today.getMonth() + 1).padStart(2, "0"),
-                String(today.getDate()).padStart(2, "0"),
-            ].join("-"));
-        });
-    }, []);
+    const minDate = useClientToday();
 
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         try {
+            setSubmitting(true);
             const { data, error } = await authClient.token();
-
-            console.log("JWT Token:", data?.token);
-            console.log("JWT Error:", error);
 
             if (error || !data?.token) {
                 throw new Error("JWT token not found. Please login again.");
             }
-
             const eventData = {
                 ...form,
                 category: eventType,
                 image: imageUrl,
             };
 
-            const res = await fetch("http://localhost:5000/create-event", {
+            const res = await fetch(`${API_URL}/create-event`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -109,7 +99,7 @@ export default function CreateEventPage() {
                 throw new Error(result.message || "Failed to create event");
             }
 
-            alert("Event created successfully!");
+            toast.success("Event created successfully!");
             setForm(initialForm);
             setImageUrl("");
             setEventType("Donation");
@@ -117,7 +107,9 @@ export default function CreateEventPage() {
 
         } catch (error) {
             console.error("Error creating event:", error);
-            alert(error instanceof Error ? error.message : "Something went wrong");
+            toast.error(error instanceof Error ? error.message : "Something went wrong");
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -299,8 +291,7 @@ export default function CreateEventPage() {
                                         onChange={(e) => update("description", e.target.value)}
                                         required
                                         placeholder="Explain the purpose of the drive, volunteers required, items being distributed or tasks to complete..."
-                                        className="min-h-[125px] resize-y rounded-xl border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-6 shadow-sm focus-visible:border-[#0ead69] focus-visible:ring-[#0ead69]"
-                                    />
+                                        className="min-h-[125px] resize-y rounded-xl border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-6 shadow-sm focus-visible:border-[#0ead69] focus-visible:ring-[#0ead69]"/>
                                 </Field>
 
                                 <div className="flex flex-col gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 sm:flex-row sm:items-center sm:justify-between dark:bg-[#1B1E26]">
@@ -313,9 +304,19 @@ export default function CreateEventPage() {
                                 </div>
                                 <Button
                                     type="submit"
-                                    className="h-12 w-full cursor-pointer rounded-xl bg-[#0ead69] text-sm font-bold text-white shadow-sm transition hover:bg-[#07c573]">
-                                    <PlusCircle size={17} />
-                                    Publish Event
+                                    disabled={submitting}
+                                    className="h-12 w-full cursor-pointer rounded-xl bg-[#0ead69] text-sm font-bold text-white shadow-sm transition hover:bg-[#07c573] disabled:cursor-not-allowed disabled:opacity-70">
+                                    {submitting ? (
+                                        <>
+                                            <Loader2 size={17} className="animate-spin" />
+                                            Publishing...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <PlusCircle size={17} />
+                                            Publish Event
+                                        </>
+                                    )}
                                 </Button>
                             </FieldGroup>
 

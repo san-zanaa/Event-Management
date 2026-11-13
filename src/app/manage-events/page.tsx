@@ -1,11 +1,25 @@
 
 "use client";
 
-import { startTransition, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import Link from "next/link";
 import Image from "next/image";
 import { CalendarDays, MapPin, Users, Pencil, Trash2, Plus, Loader2, AlertCircle, Clock, PartyPopper } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+import { API_URL, useClientToday, resolveImageSrc } from "@/lib/api";
+import Reveal from "@/components/Reveal";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -65,18 +79,7 @@ export default function ManageEventsPage() {
     const [saving, setSaving] = useState(false);
     const [deletingId, setDeletingId] = useState<string | null>(null);
 
-    const [minDate, setMinDate] = useState("");
-    useEffect(() => {
-        startTransition(() => {
-            const currentDate = new Date();
-            setMinDate([
-                currentDate.getFullYear(),
-                String(currentDate.getMonth() + 1).padStart(2, "0"),
-                String(currentDate.getDate()).padStart(2, "0"),
-            ].join("-"));
-        });
-    }, []);
-
+    const minDate = useClientToday();
     const userEmail = session?.user?.email;
     const loading = Boolean(userEmail) && eventsLoading;
 
@@ -93,7 +96,7 @@ export default function ManageEventsPage() {
                 if (error || !tokenData?.token) {
                     throw new Error("Please login first.");
                 }
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events`,
+                const response = await fetch(`${API_URL}/my-events`,
                     {
                         headers: {
                             Authorization: `Bearer ${tokenData.token}`,
@@ -146,7 +149,7 @@ export default function ManageEventsPage() {
     if (!editingEvent || !userEmail) return;
 
     if (!form.date || form.date < minDate) {
-        alert("Please select today or a future date.");
+        toast.error("Please select today or a future date.");
         return;
     }
 
@@ -158,7 +161,7 @@ export default function ManageEventsPage() {
             throw new Error("Please login first.");
         }
         const response = await fetch(
-            `http://localhost:5000/update-event/${editingEvent._id}`,
+            `${API_URL}/update-event/${editingEvent._id}`,
             {
                 method: "PUT",
                 headers: {
@@ -176,7 +179,6 @@ export default function ManageEventsPage() {
         if (!response.ok) {
             throw new Error(data.message || "Failed to update event.");
         }
-
         setEvents((previousEvents) =>
             previousEvents.map((event) =>
                 event._id === editingEvent._id
@@ -192,9 +194,9 @@ export default function ManageEventsPage() {
 
         setEditingEvent(null);
         setForm(initialForm);
-        alert("Event updated successfully!");
+        toast.success("Event updated successfully!");
     } catch (err) {
-        alert(
+        toast.error(
             err instanceof Error ? err.message : "Something went wrong."
         );
     } finally {
@@ -203,10 +205,6 @@ export default function ManageEventsPage() {
 };
     const handleDelete = async (eventId: string) => {
     if (!userEmail) return;
-    const confirmed = window.confirm(
-        "Are you sure you want to delete this event? This action cannot be undone."
-    );
-    if (!confirmed) return;
 
     try {
         setDeletingId(eventId);
@@ -217,7 +215,7 @@ export default function ManageEventsPage() {
         }
 
         const response = await fetch(
-            `http://localhost:5000/delete-event/${eventId}`,
+            `${API_URL}/delete-event/${eventId}`,
             {
                 method: "DELETE",
                 headers: {
@@ -233,10 +231,10 @@ export default function ManageEventsPage() {
         setEvents((previousEvents) =>
             previousEvents.filter((event) => event._id !== eventId)
         );
-        alert("Event deleted successfully!");
+        toast.info("Event deleted successfully!");
 
     } catch (err) {
-        alert(
+        toast.error(
             err instanceof Error ? err.message : "Something went wrong."
         );
     } finally {
@@ -297,7 +295,8 @@ export default function ManageEventsPage() {
                 </section>
 
                 <section className="mb-10 grid grid-cols-1 gap-5 sm:grid-cols-3">
-                    <div className="rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm transition hover:shadow-md dark:bg-[#222630]">
+                    <Reveal variant="up">
+                        <div className="h-full rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md dark:border-gray-600 dark:bg-[#222630]">
                         <div className="flex items-center justify-between">
                             <p className="text-sm font-medium text-gray-400">
                                 Total Events Created
@@ -313,7 +312,9 @@ export default function ManageEventsPage() {
                             Events organized by you
                         </p>
                     </div>
-                    <div className="rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm transition hover:shadow-md dark:bg-[#222630]">
+                    </Reveal>
+                    <Reveal variant="up" delay={120}>
+                        <div className="h-full rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md dark:border-gray-600 dark:bg-[#222630]">
                         <div className="flex items-center justify-between">
                             <p className="text-sm font-medium text-gray-400">
                                 Total Volunteers
@@ -324,16 +325,16 @@ export default function ManageEventsPage() {
                         </div>
                         <h2 className="mt-4 text-3xl font-extrabold text-gray-900 dark:text-white">
                             {events.reduce(
-                                (total, event) => total + (event.volunteerCount || 0),
-                                0
-                            )}
+                                (total, event) => total + (event.volunteerCount || 0), 0)}
                         </h2>
                         <p className="mt-1 text-xs text-gray-400">
                             People joined your events
                         </p>
                     </div>
+                    </Reveal>
 
-                    <div className="rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm transition hover:shadow-md dark:bg-[#222630]">
+                    <Reveal variant="up" delay={240}>
+                        <div className="h-full rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md dark:border-gray-600 dark:bg-[#222630]">
                         <div className="flex items-center justify-between">
                             <p className="text-sm font-medium text-gray-500">
                                 Your Account
@@ -350,15 +351,16 @@ export default function ManageEventsPage() {
                             Logged in account
                         </p>
                     </div>
+                    </Reveal>
 
-                </section> 
+                </section>
 
                 <Dialog
                     open={!!editingEvent}
                     onOpenChange={(open) => {
                         if (!open) closeEditForm();
                     }}>
-                    <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+                    <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl dark:bg-[#1B1E26]">
                         <DialogHeader>
                             <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-gray-300">
                                 Edit Event Details
@@ -476,7 +478,8 @@ export default function ManageEventsPage() {
                                         <Button
                                             type="button"
                                             variant="outline"
-                                            disabled={saving}>
+                                            disabled={saving}
+                                            className="cursor-pointer">
                                             Cancel
                                         </Button>
                                     } />
@@ -484,7 +487,7 @@ export default function ManageEventsPage() {
                                 <Button
                                     type="submit"
                                     disabled={saving}
-                                    className="bg-emerald-600 text-white hover:bg-emerald-700">
+                                    className="bg-emerald-600 text-white hover:bg-emerald-700 cursor-pointer">
                                     {saving ? (
                                         <>
                                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -544,15 +547,19 @@ export default function ManageEventsPage() {
 
 
                         <div className="space-y-5">
-                            {events.map((event) => (
-                                <article
+                            {events.map((event, index) => (
+                                <Reveal
                                     key={event._id}
-                                    className="group overflow-hidden rounded-3xl border border-gray-100 bg-white p-4 shadow-sm transition-all duration-300 hover:border-emerald-100 hover:shadow-lg sm:p-5 dark:bg-[#222630]">
+                                    variant="up"
+                                    delay={Math.min(index * 80, 320)}
+                                    duration={600}>
+                                <article
+                                    className="group overflow-hidden rounded-3xl border border-gray-100 bg-white p-4 shadow-sm transition-all duration-300 hover:border-emerald-100 hover:shadow-lg sm:p-5 dark:border-gray-600 dark:bg-[#222630]">
                                     <div className="flex flex-col gap-5 sm:flex-row">
                                         <div className="relative h-52 w-full shrink-0 overflow-hidden rounded-2xl bg-emerald-50 sm:h-48 sm:w-64">
-                                            {event.image ? (
+                                            {event.image && resolveImageSrc(event.image) ? (
                                                 <Image
-                                                    src={event.image}
+                                                    src={resolveImageSrc(event.image) as string}
                                                     alt={event.title}
                                                     fill
                                                     unoptimized
@@ -608,30 +615,60 @@ export default function ManageEventsPage() {
                                                     <Button
                                                         type="button"
                                                         onClick={() => handleEdit(event)}
-                                                        className="flex-1 gap-2 rounded-xl bg-emerald-600 px-5 text-white hover:bg-emerald-700 sm:flex-none">
+                                                        className="flex-1 gap-2 rounded-xl bg-emerald-600 px-5 text-white hover:bg-emerald-700 sm:flex-none cursor-pointer">
                                                         <Pencil size={16} />
                                                         Edit Event
                                                     </Button>
 
-                                                    <Button
-                                                        type="button"
-                                                        variant="outline"
-                                                        onClick={() => handleDelete(event._id)}
-                                                        disabled={deletingId === event._id}
-                                                        className="flex-1 gap-2 rounded-xl border-red-200 px-5 text-red-600 hover:bg-red-50 hover:text-red-700 sm:flex-none">
-                                                        {deletingId === event._id ? (
-                                                            <Loader2 size={16} className="animate-spin" />
-                                                        ) : (
-                                                            <Trash2 size={16} />
-                                                        )}
+                                                    <AlertDialog>
+                                                        <AlertDialogTrigger
+                                                            render={
+                                                                <Button
+                                                                    type="button"
+                                                                    variant="outline"
+                                                                    disabled={deletingId === event._id}
+                                                                    className="flex-1 gap-2 rounded-xl border-red-200 px-5 text-red-600 hover:bg-red-50 hover:text-red-700 sm:flex-none cursor-pointer" />
+                                                            }>
+                                                            {deletingId === event._id ? (
+                                                                <Loader2 size={16} className="animate-spin" />
+                                                            ) : (
+                                                                <Trash2 size={16} />
+                                                            )}
 
-                                                        {deletingId === event._id ? "Deleting..." : "Delete"}
-                                                    </Button>
+                                                            {deletingId === event._id ? "Deleting..." : "Delete"}
+                                                        </AlertDialogTrigger>
+
+                                                        <AlertDialogContent className="dark:bg-[#1B1E26]">
+                                                            <AlertDialogHeader>
+                                                                <AlertDialogTitle>
+                                                                    Delete this event?
+                                                                </AlertDialogTitle>
+                                                                <AlertDialogDescription>
+                                                                    This will permanently delete
+                                                                    &quot;{event.title}&quot;. This
+                                                                    action cannot be undone.
+                                                                </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel className="cursor-pointer">
+                                                                    Cancel
+                                                                </AlertDialogCancel>
+                                                                <AlertDialogAction
+                                                                    onClick={() => handleDelete(event._id)}
+                                                                    className="bg-red-600 text-white hover:bg-red-700 focus-visible:border-red-600/40 focus-visible:ring-red-600/20 dark:bg-red-600 dark:text-white dark:hover:bg-red-700 cursor-pointer">
+                                                                    <Trash2 size={16} />
+                                                                    Delete Event
+                                                                </AlertDialogAction>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </article>
+                                </Reveal>
                             ))}
                         </div>
                     )}
