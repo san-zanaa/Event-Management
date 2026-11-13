@@ -8,35 +8,37 @@ const client = new MongoClient(process.env.MONGODB_URL as string);
 const db = client.db("event-management");
 
 export const auth = betterAuth({
-  database: mongodbAdapter(db, {
-    client,
-  }),
-
-  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
-
-  emailAndPassword: {
-    enabled: true,
-    autoSignIn: false,
-  },
-
-  socialProviders: {
-    github: {
-      clientId: process.env.GITHUB_CLIENT_ID as string,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-    },
-  },
-
-  plugins: [
-    jwt({
-      sessionCookieCache: true,
+    database: mongodbAdapter(db, {
+        client,
     }),
-  ],
 
-  session: {
-    cookieCache: {
-      enabled: true,
-      strategy: "jwt",
-      maxAge: 7 * 24 * 60 * 60,
+    baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
+
+    trustedOrigins: [
+        "http://localhost:3000",
+        "https://event-management-theta-flax.vercel.app",
+    ],
+    emailAndPassword: {
+        enabled: true,
+        autoSignIn: false,
     },
-  },
+
+    socialProviders: {
+        github: {
+            clientId: process.env.GITHUB_CLIENT_ID as string,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+        },
+    },
+    plugins: [
+        jwt({
+            sessionCookieCache: true,
+        }),
+    ],
+    session: {
+        cookieCache: {
+            enabled: true,
+            strategy: "jwt",
+            maxAge: 7 * 24 * 60 * 60,
+        },
+    },
 });
