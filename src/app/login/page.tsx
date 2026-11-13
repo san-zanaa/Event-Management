@@ -9,10 +9,9 @@ import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { startTransition, Suspense, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 function LoginForm() {
-  const router = useRouter()
   const searchParams = useSearchParams()
   const redirectPath = searchParams.get("redirect") || "/"
   const [email, setEmail] = useState("");
@@ -56,9 +55,8 @@ function LoginForm() {
       sessionStorage.removeItem("signupPassword");
 
       toast.success("Login successful!");
-
-      router.push(redirectPath);
-      router.refresh();
+      
+      window.location.assign(redirectPath);
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Something went wrong. Please try again!");
